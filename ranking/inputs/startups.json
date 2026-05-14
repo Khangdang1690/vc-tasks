@@ -1,0 +1,1250 @@
+{
+  "schema_version": "1.0",
+  "startups": [
+    {
+      "name": "Tigris Data",
+      "website": "https://www.tigrisdata.com",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Atuin",
+      "website": "https://atuin.sh",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "BAML",
+      "website": "https://boundaryml.com",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Mem0",
+      "website": "https://mem0.ai",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Parasail",
+      "website": "https://www.parasail.io",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Primitive",
+      "website": "https://www.primitive.dev",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Entire",
+      "website": "https://entire.io",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Rasa",
+      "website": "https://rasa.community",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Flint",
+      "website": "https://flintk12.com",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Vizcom",
+      "website": "https://vizcom.com",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Quill",
+      "website": "https://www.quillmeetings.com",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Solvely",
+      "website": "https://solvely.ai",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Beeble",
+      "website": "https://beeble.ai",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Hallway",
+      "website": "https://hallway.ai",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "name": "Reve",
+      "website": "https://app.reve.com",
+      "one_liner": "",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_depth": {
+          "value": null,
+          "reasoning": ""
+        },
+        "prior_founding_experience": {
+          "value": null,
+          "reasoning": ""
+        },
+        "team_completeness": {
+          "value": null,
+          "reasoning": ""
+        },
+        "network_credibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "market": {
+        "tam_size": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "timing": {
+          "value": null,
+          "reasoning": ""
+        },
+        "competitive_intensity_inv": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "product": {
+        "differentiation": {
+          "value": null,
+          "reasoning": ""
+        },
+        "technical_moat": {
+          "value": null,
+          "reasoning": ""
+        },
+        "velocity": {
+          "value": null,
+          "reasoning": ""
+        },
+        "defensibility": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "traction": {
+        "revenue_signal": {
+          "value": null,
+          "reasoning": ""
+        },
+        "users_customers": {
+          "value": null,
+          "reasoning": ""
+        },
+        "growth_rate": {
+          "value": null,
+          "reasoning": ""
+        },
+        "engagement_retention": {
+          "value": null,
+          "reasoning": ""
+        }
+      },
+      "notes": ""
+    }
+  ]
+}

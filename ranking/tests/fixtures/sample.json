@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "startups": [
+    {
+      "name": "Alpha Labs",
+      "website": "https://alpha.example.com",
+      "one_liner": "Test fixture: strong team, weak traction.",
+      "stage": "seed",
+      "team": {
+        "founder_market_fit": {"value": 5, "reasoning": "From founder LinkedIn showing 8 years building the exact product category at Stripe, we can infer maximum founder-market fit."},
+        "technical_depth": {"value": 5, "reasoning": "From a founder bio listing Google staff engineer and an OSS project with 30k GitHub stars, we can infer world-class technical depth."},
+        "prior_founding_experience": {"value": 5, "reasoning": "From Crunchbase showing a prior $400M exit, we can infer top-tier founding experience."},
+        "team_completeness": {"value": 4, "reasoning": "From the team page listing CEO + CTO + Head of Sales, we can infer the core functions are covered but design is missing."},
+        "network_credibility": {"value": 5, "reasoning": "From the funding announcement listing Sequoia lead + 5 named tier-1 angels, we can infer top-tier network credibility."}
+      },
+      "market": {
+        "tam_size": {"value": 4, "reasoning": "From Gartner's report citing a $40B segment, we can infer a large but not category-leading TAM."},
+        "growth_rate": {"value": 4, "reasoning": "From the same Gartner report showing 28% CAGR, we can infer strong but not extreme growth."},
+        "timing": {"value": 4, "reasoning": "From the recent regulatory shift opening this category, we can infer favorable timing."},
+        "competitive_intensity_inv": {"value": 3, "reasoning": "From a competitive landscape showing 8 funded competitors, we can infer moderate competitive intensity."}
+      },
+      "product": {
+        "differentiation": {"value": 4, "reasoning": "From the changelog and demo showing a unique data-pipeline approach absent in competitors, we can infer strong differentiation."},
+        "technical_moat": {"value": 4, "reasoning": "From a patent filing on the core algorithm, we can infer real technical moat."},
+        "velocity": {"value": 4, "reasoning": "From a public changelog showing weekly releases, we can infer high product velocity."},
+        "defensibility": {"value": 3, "reasoning": "From the product being self-hosted with no data lock-in, we can infer moderate defensibility only."}
+      },
+      "traction": {
+        "revenue_signal": {"value": 2, "reasoning": "From a press release mentioning 3 design partners but no ARR figure, we can infer early but unproven revenue."},
+        "users_customers": {"value": 2, "reasoning": "From only 3 named design partners and no waitlist disclosure, we can infer thin user traction."},
+        "growth_rate": {"value": 2, "reasoning": "From the absence of any growth metric disclosure, we can infer growth is too early to measure."},
+        "engagement_retention": {"value": 2, "reasoning": "From a single quoted customer testimonial and no retention metric, we can infer engagement is unproven."}
+      },
+      "notes": "High-signal team, early on traction."
+    },
+    {
+      "name": "Bravo Inc",
+      "website": "https://bravo.example.com",
+      "one_liner": "Test fixture: balanced profile, partial data.",
+      "stage": "pre_seed",
+      "team": {
+        "founder_market_fit": {"value": 3, "reasoning": "From a founder bio showing adjacent (not direct) industry experience, we can infer moderate fit."},
+        "technical_depth": {"value": 4, "reasoning": "From the team page listing two senior engineers from a known infra company, we can infer strong technical depth."},
+        "prior_founding_experience": {"value": null, "reasoning": ""},
+        "team_completeness": {"value": 3, "reasoning": "From the team page showing technical co-founders only with no commercial hire, we can infer a coverage gap."},
+        "network_credibility": {"value": 3, "reasoning": "From a single named angel investor and no accelerator, we can infer modest credibility."}
+      },
+      "market": {
+        "tam_size": {"value": 5, "reasoning": "From an analyst report citing a $120B segment, we can infer maximum TAM."},
+        "growth_rate": {"value": 5, "reasoning": "From the same analyst report citing 45% CAGR, we can infer maximum growth."},
+        "timing": {"value": 4, "reasoning": "From recent customer behavior shifts in the segment, we can infer favorable timing."},
+        "competitive_intensity_inv": {"value": null, "reasoning": ""}
+      },
+      "product": {
+        "differentiation": {"value": 3, "reasoning": "From the landing page showing similar feature set to competitors, we can infer modest differentiation."},
+        "technical_moat": {"value": 3, "reasoning": "From the absence of a patent or unique architecture mentioned, we can infer no clear moat."},
+        "velocity": {"value": 4, "reasoning": "From a GitHub repo showing daily commits for 6 months, we can infer high velocity."},
+        "defensibility": {"value": 3, "reasoning": "From the product being a CLI with portable data, we can infer moderate defensibility."}
+      },
+      "traction": {
+        "revenue_signal": {"value": 1, "reasoning": "From the absence of any paid customer mention and stealth status, we can infer no revenue signal."},
+        "users_customers": {"value": 2, "reasoning": "From a Discord community of 200 members, we can infer light early-user signal."},
+        "growth_rate": {"value": null, "reasoning": ""},
+        "engagement_retention": {"value": null, "reasoning": ""}
+      },
+      "notes": ""
+    },
+    {
+      "name": "Charlie Co",
+      "website": "https://charlie.example.com",
+      "one_liner": "Test fixture: pillar entirely missing.",
+      "stage": "pre_seed",
+      "team": {
+        "founder_market_fit": {"value": null, "reasoning": ""},
+        "technical_depth": {"value": null, "reasoning": ""},
+        "prior_founding_experience": {"value": null, "reasoning": ""},
+        "team_completeness": {"value": null, "reasoning": ""},
+        "network_credibility": {"value": null, "reasoning": ""}
+      },
+      "market": {
+        "tam_size": {"value": 3, "reasoning": "From an analyst figure of ~$8B for this niche, we can infer mid-size TAM."},
+        "growth_rate": {"value": 3, "reasoning": "From the same analyst figure showing ~15% CAGR, we can infer moderate growth."},
+        "timing": {"value": 3, "reasoning": "From no obvious tailwind or headwind in the segment, we can infer neutral timing."},
+        "competitive_intensity_inv": {"value": 3, "reasoning": "From a handful of established competitors and few new entrants, we can infer moderate competitive intensity."}
+      },
+      "product": {
+        "differentiation": {"value": 3, "reasoning": "From the landing page showing one novel feature on top of a standard offering, we can infer modest differentiation."},
+        "technical_moat": {"value": 3, "reasoning": "From the absence of unique IP but a complex integration surface, we can infer modest moat."},
+        "velocity": {"value": 3, "reasoning": "From monthly product updates on the blog, we can infer steady velocity."},
+        "defensibility": {"value": 3, "reasoning": "From moderate switching costs once integrated, we can infer moderate defensibility."}
+      },
+      "traction": {
+        "revenue_signal": {"value": 3, "reasoning": "From a press release mentioning paying pilots, we can infer early revenue."},
+        "users_customers": {"value": 3, "reasoning": "From a customer-logos page showing 8 mid-market companies, we can infer real early-adopter traction."},
+        "growth_rate": {"value": 3, "reasoning": "From a founder tweet citing 'doubled in 6 months', we can infer healthy growth (~12% MoM)."},
+        "engagement_retention": {"value": 3, "reasoning": "From a testimonial citing 'core daily tool', we can infer reasonable engagement."}
+      },
+      "notes": "Used to verify the missing-pillar warning path."
+    }
+  ]
+}
