@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from ranking.contract import Startup, StartupBatch
-from ranking.weights import PILLARS, WEIGHTS
+from ranking.weights import PILLARS, weights_for
 
 
 @dataclass(frozen=True)
@@ -44,6 +44,7 @@ class ScoredStartup:
     pillars: dict[str, PillarResult]
     total: float
     data_completeness: float
+    pillar_weights: dict[str, float] = field(default_factory=dict)
     warnings: tuple[str, ...] = field(default_factory=tuple)
 
 
@@ -80,7 +81,8 @@ def score_pillar(startup: Startup, pillar: str) -> PillarResult:
 
 def score_startup(startup: Startup) -> ScoredStartup:
     pillars = {p: score_pillar(startup, p) for p in PILLARS}
-    total = sum(pillars[p].normalized * WEIGHTS[p] for p in PILLARS)
+    weights = weights_for(startup.stage)
+    total = sum(pillars[p].normalized * weights[p] for p in PILLARS)
     filled = sum(p.filled for p in pillars.values())
     total_subs = sum(p.total for p in pillars.values())
     completeness = filled / total_subs if total_subs else 0.0
@@ -94,6 +96,7 @@ def score_startup(startup: Startup) -> ScoredStartup:
         pillars=pillars,
         total=round(total, 2),
         data_completeness=round(completeness, 4),
+        pillar_weights=dict(weights),
         warnings=warnings,
     )
 

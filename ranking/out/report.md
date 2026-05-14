@@ -1,0 +1,755 @@
+# Startup Ranking Report
+
+_Scores in [0, 100]. Pillar weights vary by stage; see CONTRACT.md. Leaderboards are stratified by stage — cross-stage totals are not directly comparable. Deterministic output._
+
+## Leaderboards
+
+### Pre-Seed (1)
+
+_Weights: Team 45% / Market 25% / Product 20% / Traction 10%._
+
+| Rank | Startup | Total | Team | Market | Product | Traction | Data |
+|---:|:---|---:|---:|---:|---:|---:|---:|
+| 1 | Primitive | 40.98 | 45.0 | 56.2 | 33.3 | 0.0 | 71% |
+
+### Seed (7)
+
+_Weights: Team 40% / Market 25% / Product 20% / Traction 15%._
+
+| Rank | Startup | Total | Team | Market | Product | Traction | Data |
+|---:|:---|---:|---:|---:|---:|---:|---:|
+| 1 | Solvely | 65.19 | 70.0 | 50.0 | 62.5 | 81.2 | 100% |
+| 2 | Quill | 62.19 | 75.0 | 68.8 | 56.2 | 25.0 | 88% |
+| 3 | Entire | 61.38 | 80.0 | 62.5 | 68.8 | 0.0 | 76% |
+| 4 | Beeble | 59.50 | 55.0 | 62.5 | 62.5 | 62.5 | 100% |
+| 5 | BAML | 58.12 | 50.0 | 62.5 | 81.2 | 41.7 | 94% |
+| 6 | Atuin | 55.00 | 50.0 | 50.0 | 68.8 | 58.3 | 94% |
+| 7 | Hallway | 35.79 | 40.0 | 37.5 | 33.3 | 25.0 | 82% |
+
+### Series A (4)
+
+_Weights: Team 30% / Market 25% / Product 20% / Traction 25%._
+
+| Rank | Startup | Total | Team | Market | Product | Traction | Data |
+|---:|:---|---:|---:|---:|---:|---:|---:|
+| 1 | Mem0 | 81.92 | 80.0 | 75.0 | 81.2 | 91.7 | 94% |
+| 2 | Parasail | 74.06 | 75.0 | 68.8 | 62.5 | 87.5 | 100% |
+| 3 | Tigris Data | 72.46 | 70.0 | 62.5 | 75.0 | 83.3 | 94% |
+| 4 | Flint | 64.19 | 65.0 | 68.8 | 43.8 | 75.0 | 94% |
+
+### Series B (2)
+
+_Weights: Team 20% / Market 25% / Product 25% / Traction 30%._
+
+| Rank | Startup | Total | Team | Market | Product | Traction | Data |
+|---:|:---|---:|---:|---:|---:|---:|---:|
+| 1 | Vizcom | 70.25 | 70.0 | 62.5 | 62.5 | 83.3 | 94% |
+| 2 | Reve | 62.25 | 80.0 | 68.8 | 56.2 | 50.0 | 88% |
+
+### Series C (1)
+
+_Weights: Team 15% / Market 20% / Product 25% / Traction 40%._
+
+| Rank | Startup | Total | Team | Market | Product | Traction | Data |
+|---:|:---|---:|---:|---:|---:|---:|---:|
+| 1 | Rasa | 63.98 | 80.0 | 56.2 | 56.2 | 66.7 | 94% |
+
+## Per-Startup Breakdown
+
+### 1. Primitive — 40.98/100
+
+- **Website:** <https://www.primitive.dev/>
+- **Stage:** Pre-Seed
+- **One-liner:** Email-and-webhook infrastructure pitched as the communication layer for autonomous AI agents (managed plus self-hostable PrimitiveMail), currently in beta.
+- **Data completeness:** 71%
+
+**Team (45%)** — raw 2.80 / 5, normalized 45.00, filled 5/5 `█████████░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 3 | From founder Ethan Byrd previously co-founding Actual AI (AI agents for engineering managers — sprint-review/standup workflows per GeekWire 2025 and Crunchbase organization/sprintreview-ai), the prior product addressed eng-management agent workflows rather than messaging/email infra; the pivot from 'agents for eng managers' to 'agent communication layer' is adjacent (anchor 3) rather than lived-the-problem at scale (anchor 5). |
+| technical_depth | 3 | From Ethan Byrd's LinkedIn (linkedin.com/in/etbyrd) showing engineering roles at Microsoft, AWS, Meta, and Google before co-founding Actual AI, we can infer a strong-engineer background — but no Staff/Principal level is publicly confirmed and no OSS-project-lead signal exists, so the score sits at anchor 3 ('strong engineers') rather than the world-class anchor-5. |
+| prior_founding_experience | 3 | From Ethan Byrd being co-founder/CTO of Actual AI which raised $3.2M from AlleyCorp (GeekWire 2025) and continues to operate, we can infer one prior credible founding cycle without an exit. |
+| team_completeness | 2 | From the YC profile (ycombinator.com/companies/primitive) listing team size of 3 and active hiring for Founding Engineer + Founding Infrastructure Engineer roles, we can infer a one-dimensional, founder-heavy team still building out core technical bench. |
+| network_credibility | 3 | From the company being a Y Combinator S2026 batch member (ycombinator.com/companies/primitive) with no other named institutional VC on the profile yet, we can infer top-tier accelerator validation but no tier-1 VC stack. |
+
+**Market (25%)** — raw 3.25 / 5, normalized 56.25, filled 4/4 `███████████░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 3 | From the addressable surface being agent-comms infrastructure — a slice of both transactional email (Resend/Postmark/SendGrid, multi-billion category) and the emerging AI-agent dev-tool market — we can infer a meaningful but bounded TAM, neither <$1B nor clearly $100B+. |
+| growth_rate | 4 | From the AI-agent dev-tools segment growing rapidly in 2025–2026 (referenced across YC's S2026 batch theme and PYMNTS 2026 coverage) and transactional email being a stable mid-teens growth category, the blended growth supports a 4 — well above market but not the >40% top tier. |
+| timing | 4 | From AI agents transitioning to production deployment in 2026 (per YC batch S2026 theme and broader market context referenced in TechCrunch/PYMNTS coverage), we can infer a clearly favorable timing window, though the 'agent comms' framing is still being defined. |
+| competitive_intensity_inv | 2 | From Resend, Postmark, SendGrid, AWS SES dominating transactional email plus newer agent-orchestration frameworks (CrewAI, LangGraph) building communication primitives natively, we can infer high competitive intensity even within the agent-comms framing. |
+
+**Product (20%)** — raw 2.33 / 5, normalized 33.33, filled 3/4 `███████░░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 3 | From the webhook-first 'receive all email across domains' MyMX feature (primitive.dev) being a meaningful twist on email-for-developers, we can infer modest differentiation but the SDK/API surface largely mirrors Resend/Postmark. |
+| technical_moat | 2 | From the product being SMTP/webhook infrastructure that incumbents (SendGrid, AWS SES, Postmark) have built many times (per sequenzy.com 2026 comparison), we can infer minimal hard-tech moat at this stage. |
+| velocity | — | No public changelog, blog, or GitHub release surface visible on primitive.dev as of 2026-05; release cadence not assessable from the free public web. |
+| defensibility | 2 | From an API-and-webhook product surface (primitive.dev SDKs for Node/Python/Go) that customers can swap with a few config-line changes, we can infer low switching costs. |
+
+**Traction (10%)** — _no data_ — normalized 0.00, filled 0/4
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | — | Product in beta per primitive.dev landing; no disclosed paying customers or pilot list. |
+| users_customers | — | No public user counts on primitive.dev or the YC profile. |
+| growth_rate | — | No public time-series user, request-volume, or revenue figure; product still in beta. |
+| engagement_retention | — | Beta product (primitive.dev) with no disclosed retention, NRR, or repeat-usage data. |
+
+**Notes:** Y Combinator S2026 batch, San Francisco, 3-person team (per ycombinator.com/companies/primitive). Beta product. Founder Ethan Byrd previously co-founded Actual AI ($3.2M seed, AlleyCorp, 2025 per GeekWire). Note: a separate fintech-AI company also called 'Primitive' exists (Derek White, Fin Capital backed) — explicitly excluded from this profile based on the primitive.dev URL provided.
+
+**Warnings**
+
+- ⚠️ pillar 'traction' has no filled sub-scores; counted as 0
+
+### 1. Solvely — 65.19/100
+
+- **Website:** <https://solvely.ai/>
+- **Stage:** Seed
+- **One-liner:** Consumer AI study companion for K-12 through grad-level work, offering homework help, photo-math, quiz/essay generation, and class-audio note-taking on mobile.
+- **Data completeness:** 100%
+
+**Team (40%)** — raw 3.80 / 5, normalized 70.00, filled 5/5 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 4 | From Du Zhang's ASU+GSV speaker bio (asugsvsummit.com/speakers/du-zhang) describing a prior online tutoring marketplace exit and prior gaming products scaled to 10M+ DAU, plus current product-market traction in consumer EdTech (solvely.ai), we can infer a strong adjacent operator background — held at anchor 4 rather than anchor 5 because the >$100M tutoring exit is single-sourced to a self-supplied speaker bio with no Crunchbase/SEC/press second source confirming the deal name or value. |
+| technical_depth | 4 | From Du Zhang's prior track record of scaling gaming products to 10M+ DAU (per asugsvsummit.com/speakers/du-zhang) and Solvely currently shipping a multi-million-rating mobile app (apps.apple.com/us/app/solvely-ai-study-companion/id6446930976 with 31k+ iOS reviews; play.google.com/store/apps/details?id=com.solvely.photo.math.solver.calculator.ai with 80k+ ratings), we can infer strong applied-product depth at consumer scale, defensible at anchor 4 ('strong engineers') without explicit FAANG-staff/PhD/OSS-lead 5-anchor evidence. |
+| prior_founding_experience | 4 | From Du Zhang's ASU+GSV speaker bio (asugsvsummit.com/speakers/du-zhang) claiming a prior tutoring-marketplace exit '>$100M' and gaming products scaled to '$50M+ ARR' — credible repeat-founder profile but the >$100M exit is single-sourced (no Crunchbase exit record, acquirer press release, or SEC filing surfaces the company name or deal value) — we hold at anchor 4 'prior startup, no exit confirmed at $100M+' rather than the strict anchor 5. |
+| team_completeness | 3 | From three co-founders being listed (Du Zhang, Richard Zhang, Enpeng Yuan) per Tracxn/Crunchbase, with no public commercial/design lead disclosed, we can infer founder-heavy coverage with moderate role visibility. |
+| network_credibility | 4 | From the $8M seed including Basis Set Ventures, Canaan Partners, and Emerge London (per Tracxn funding profile), we can infer credible tier-1-adjacent VC backing without an a16z/Sequoia lead. |
+
+**Market (25%)** — raw 3.00 / 5, normalized 50.00, filled 4/4 `██████████░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 3 | From Grand View Research sizing the global online tutoring services market at USD 10.42B in 2024 → USD 23.73B by 2030 at 14.5% CAGR (grandviewresearch.com/industry-analysis/online-tutoring-services-market) as the closest analyst proxy, we can infer a TAM right at the ~$10B anchor-3 — the broader HolonIQ EdTech expenditure figure ($404B by 2025 at 16.3% CAGR per holoniq.com/notes/global-education-technology-market-to-reach-404b-by-2025) is too inclusive (governments/companies/consumers across all segments) to use as Solvely's direct TAM. |
+| growth_rate | 3 | From Grand View Research's 14.5% CAGR for online tutoring services 2025-2030 (grandviewresearch.com/industry-analysis/online-tutoring-services-market) and HolonIQ's 16.3% CAGR for global EdTech through 2025 (holoniq.com/notes/global-education-technology-market-to-reach-404b-by-2025), we can infer the addressable category is growing in the mid-teens CAGR territory — squarely at the ~15% anchor 3, not the >40% anchor 5. |
+| timing | 5 | From students rapidly adopting AI homework helpers post-2023 (solvely.ai reaching 10M users in roughly two years from launch) and the AI-native generation entering school in 2024–2026, we can infer a clear-now inflection. |
+| competitive_intensity_inv | 1 | From the consumer AI tutoring/homework-help space being saturated with Chegg, Photomath (Google), Mathway, Brainly, Course Hero, Gauthmath, Symbolab, Microsoft Math Solver, Khan Academy, and ChatGPT itself, we can infer maximum competitive intensity. |
+
+**Product (20%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 3 | From Solvely combining photo-solver + AI tutor + note-taker + quiz/essay generator under one consumer app (solvely.ai), we can infer modest bundle differentiation but each individual surface is well-covered by single-purpose competitors. |
+| technical_moat | 3 | From Solvely's 95%-accuracy claim across subjects requiring tuned math/science reasoning models (solvely.ai) backed by 200M+ session-data scale, we can infer modest data-network-effect moat without proprietary base-model IP. |
+| velocity | 5 | From the iOS App Store version history showing seven point releases in October 2025 alone (4.6.9 → 4.7.6 between Oct 4 and Oct 27, per soft112.com/solvely listing) and the 5.2.1 'Back to School' release on 2026-04-29, we can infer weekly shipping cadence at the 5-anchor. |
+| defensibility | 3 | From the product being a consumer mobile app where users can switch with a download (solvely.ai feature surface), tempered by saved-history and subscription-renewal inertia, we can infer moderate-to-low switching costs. |
+
+**Traction (15%)** — raw 4.25 / 5, normalized 81.25, filled 4/4 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 4 | From solvely.ai stating #1 App Store Education ranking, a paid 'Solvely Unlimited' tier, and 10M+ users globally (solvely.ai), we can infer growing subscription ARR with strong distribution — though specific ARR is not disclosed. |
+| users_customers | 5 | From third-party app-store data — apps.apple.com/us/app/solvely-ai-study-companion/id6446930976 showing 31k+ iOS user reviews and play.google.com/store/apps/details?id=com.solvely.photo.math.solver.calculator.ai showing 80k+ Android ratings (combined 111k+ ratings, consistent with multi-million cumulative installs at industry rule-of-thumb 1-3% rating-to-install ratio) — we can infer an active install base well past the 1k-active-users 5-anchor, independently of the company's own '10M+ learners' marketing claim. |
+| growth_rate | 4 | From the company going from a 2023 launch to ~111k combined iOS+Android ratings and a Top-Education App Store ranking by 2026 (solvely.ai, app-store data), we can infer growth comfortably above the ~5% MoM anchor-3 bar — defensible at anchor 4 ('above-average') without an explicit MoM figure that would clear the >20% MoM anchor-5 threshold; computing the implied compounded MoM from the company's own 10M-user claim depends on an unverified user-count and is not anchored. |
+| engagement_retention | 4 | From sustained 4.7/5 across 31k+ App Store iOS reviews and 4.65/5 across 80k+ Android ratings (apps.apple.com/us/app/solvely-ai-study-companion/id6446930976, play.google.com/store/apps/details?id=com.solvely.photo.math.solver.calculator.ai) as a strong qualitative-retention proxy at consumer scale, we can infer 'strong qualitative retention' — though no NRR figure is publicly disclosed. |
+
+**Notes:** Founded 2023, San Francisco / Wilmington DE. Co-founders Du Zhang (CEO, ASU+GSV speaker bio claims a prior $100M+ tutoring-marketplace exit; the deal name and value are NOT independently confirmed in Crunchbase/SEC/press — single-source caveat applies to founding-experience and founder-market-fit scores), Richard Zhang, Enpeng Yuan. $8M total raised (Basis Set Ventures, Canaan Partners, Emerge London per Tracxn). Named to Prosumer AI 40 (solvely.ai/blog/prosumer-ai-40).
+
+### 2. Quill — 62.19/100
+
+- **Website:** <https://www.quillmeetings.com/>
+- **Stage:** Seed
+- **One-liner:** On-device 'sovereign' AI chief-of-staff (Quilliam) for meetings that transcribes locally, syncs end-to-end-encrypted, and acts across Linear/Notion/etc.
+- **Data completeness:** 88%
+
+**Team (40%)** — raw 4.00 / 5, normalized 75.00, filled 5/5 `███████████████░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 4 | From co-founder Nick having spent his career at AME Cloud Ventures attending 'thousands of meetings' and sitting on Zoom's board through IPO (PRNewswire 2026-02-25), and Michael having operated AngelList Venture from $0 to $1B AUM, we can infer founders who lived meeting/coordination overload at scale — though from the VC/operator side, not as ICs. |
+| technical_depth | 4 | From co-founder Michael's MIT computer-science background plus early AngelList engineering tenure building AngelList Syndicates (PRNewswire 2026-02-25), and a local-first on-device AI transcription/agent stack (siliconangle.com 2026-03-03), we can infer strong applied engineering depth a notch under the FAANG-staff/OSS-lead 5-anchor. |
+| prior_founding_experience | 3 | From Nick being managing director of AME Cloud from inception (firm-founding rather than startup-founding) and Michael leading AngelList Venture from $0 to $1B+ AUM as operator (PRNewswire 2026-02-25), we can infer significant scaling experience without a prior startup exit. |
+| team_completeness | 4 | From the company already having hired Founding COO/Growth Yacob Berhane and Head of Enterprise Clayton Bryan alongside the two founders (PRNewswire 2026-02-25), we can infer technical + commercial + enterprise GTM coverage at seed-stage. |
+| network_credibility | 5 | From the seed being led by Basis Set Ventures with 500 Global, Morado Ventures, AME Cloud, and Naval Ravikant participating (PRNewswire 2026-02-25), we can infer a tier-1 VC stack plus marquee-angel signal that clears the 5-anchor. |
+
+**Market (25%)** — raw 3.75 / 5, normalized 68.75, filled 4/4 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From Grand View Research sizing the AI Assistant market at USD 16.29B in 2024 → USD 73.80B by 2033 at 18.8% CAGR (grandviewresearch.com/industry-analysis/ai-assistant-market-report) and Market.us projecting the Personal AI Assistant market at USD 56.3B by 2034 (market.us/report/personal-ai-assistant-market/), we can infer a TAM in the multi-tens-of-billions on a 5-9-year horizon — past the ~$10B anchor-3 but short of the >$100B anchor-5. |
+| growth_rate | 5 | From Market.us projecting the Personal AI Assistant market at a 38.10% CAGR 2025-2034 (market.us/report/personal-ai-assistant-market/) and Mordor Intelligence sizing the broader Intelligent Personal Assistant market at a 32.1% CAGR 2025-2035 (mordorintelligence.com proxy), with the more conservative Grand View AI Assistant figure at 18.8%, we can infer the personal-AI-assistant subsegment Quill targets is growing at or above the >40% anchor-5 threshold. |
+| timing | 5 | From on-device AI being unlocked by Apple Intelligence and improved local-LLM efficiency in 2024–2026 (siliconangle.com 2026-03-03 explicit on-device framing), plus enterprise privacy demand, we can infer a clear-now inflection for sovereign AI assistants. |
+| competitive_intensity_inv | 1 | From the AI-meeting-notes category being saturated with Otter.ai, Fireflies, Granola, Fathom, Tactiq, Krisp, Microsoft Copilot, Zoom AI Companion, Notion AI, and others (per G2 quill-meetings comparison cohort), we can infer maximum competitive intensity. |
+
+**Product (20%)** — raw 3.25 / 5, normalized 56.25, filled 4/4 `███████████░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From Quill's local-first on-device architecture (audio never leaves the device, E2E-encrypted optional sync, per PRNewswire 2026-02-25), we can infer a sharp privacy-and-sovereignty angle versus the cloud-by-default incumbents. |
+| technical_moat | 3 | From on-device transcription + agentic action being achievable with available local-LLM/ASR stacks (siliconangle.com 2026-03-03), we can infer execution moat through engineering quality but no proprietary IP or unique data moat at this stage. |
+| velocity | 3 | From quillmeetings.com/release-notes shipping v2.1.1 on 2026-02-15, v2.2.6 on 2026-03-27, and v2.3.1 on 2026-04-13 — three minor releases within ~60 days — we can infer roughly monthly shipping cadence at the 3-anchor. |
+| defensibility | 3 | From the product accumulating private user context (meeting history, briefing materials, Linear/Notion integrations per PRNewswire 2026-02-25) which is non-trivial to migrate, we can infer moderate workflow lock-in. |
+
+**Traction (15%)** — raw 2.00 / 5, normalized 25.00, filled 2/4 `█████░░░░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 2 | From Quill launching publicly in Feb 2026 alongside the seed announcement (PRNewswire 2026-02-25) with G2 reviews existing but no named enterprise customers or ARR disclosed, we can infer early monetization with pilots underway. |
+| users_customers | 2 | From the iOS Quill Companion app (apps.apple.com/us/app/quill-companion/id6472243238) showing only 6 user ratings as of 2026-05-14 (per itunes.apple.com/lookup?id=6472243238) — corroborating the early-stage hand-counted user base for this 3-month-old launch — plus the desktop product's G2 reviews (g2.com/products/quill-meetings/reviews), we can infer a small early-adopter cohort below the early-adopter anchor-3 threshold. |
+| growth_rate | — | No public MoM growth figure; company launched 2026-02-25 and has not disclosed time-series user or revenue data. |
+| engagement_retention | — | Company is too new (publicly launched 2026-02-25) for any meaningful retention measurement to be visible; no NRR, churn, or DAU/MAU figures disclosed. |
+
+**Notes:** Seed: $6.5M, 2026-02-25, led by Basis Set Ventures with 500 Global, Naval Ravikant, Morado Ventures, AME Cloud (PRNewswire). Founders Nick (ex-AME Cloud MD, Zoom board through IPO) and Michael (MIT CS, scaled AngelList Venture to $1B+ AUM). Notable hires: Yacob Berhane (Founding COO/Growth), Clayton Bryan (head of enterprise). Bear case: the local-first / privacy moat must convert to enterprise contracts before Apple Intelligence (already shipping on-device assistants natively in macOS/iOS) and Microsoft Copilot ship compliant enterprise equivalents — those incumbents are the silent competitive risk, not Otter/Granola.
+
+### 3. Entire — 61.38/100
+
+- **Website:** <https://entire.io/>
+- **Stage:** Seed
+- **One-liner:** Developer platform for human-agent collaboration; first product is Checkpoints, an open-source CLI that captures AI agent context (prompts, reasoning) into git on every commit.
+- **Data completeness:** 76%
+
+**Team (40%)** — raw 4.20 / 5, normalized 80.00, filled 5/5 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From founder Thomas Dohmke being the former CEO of GitHub (per TechCrunch 2026-02-10), we can infer he has lived the developer-platform problem at the largest possible scale — directly meeting the 5-anchor. |
+| technical_depth | 4 | From Thomas Dohmke leading GitHub through the Copilot era as CEO and shipping AI dev tooling at hundreds-of-millions-of-developers scale (TechCrunch 2026-02-10, thenewstack.io interview), we can infer world-class platform leadership depth — anchored at 4 because the rubric's anchor-5 IC archetype (ex-FAANG staff+, PhD, OSS lead) describes IC engineers rather than CEOs, and no equivalent IC bench is publicly named at Entire today. |
+| prior_founding_experience | 4 | From Dohmke having founded HockeyApp (mobile-app distribution, acquired by Microsoft in 2014, deal size not publicly disclosed at $100M+ level) AND subsequently running GitHub as CEO through scaled-revenue years post-Microsoft acquisition (TechCrunch 2026-02-10, thenewstack.io interview), we can infer 'scaled past meaningful revenue' on the GitHub leadership leg — defensible at anchor 4 with stretch toward 5, but kept at 4 because no $100M+ personal-exit figure for HockeyApp itself is confirmed. |
+| team_completeness | 3 | From entire.io news disclosing 15 employees with plans to scale past 30 engineers (TechCrunch 2026-02-10), no named commercial lead (CRO/Head of Sales) and no named design lead surfacing across the 23 dated entire.io blog posts (2026-02-10 to 2026-05-11) or the company news page as of 2026-05-14, we can infer current coverage is engineering-heavy with the GTM and design functions still pending — anchor 3 (decent split with a gap) rather than anchor 5's tech+commercial+design currently covered. |
+| network_credibility | 5 | From Felicis leading + Madrona, M12, Basis Set, 20VC, Cherry, Picus, GFC participating, plus angel investors including Jerry Yang (Yahoo), Olivier Pomel (Datadog CEO), Garry Tan (YC), and Gergely Orosz (TechCrunch 2026-02-10), we can infer maximum-tier VC + named-advisor stack. |
+
+**Market (25%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From Mordor Intelligence sizing the AI Code Tools market at USD 7.37B in 2025 → USD 23.97B by 2030 (mordorintelligence.com/industry-reports/artificial-intelligence-code-tools-market) and Business Research Insights / Verified Market Research sizing the broader software-development-tools market at USD 33.5B in 2024 growing to USD 76.5B by 2033 (businessresearchinsights.com/market-reports/software-development-tools-market-106006), we can infer a developer-platform TAM in the multi-tens-of-billions today — comfortably past anchor 3 (~$10B) and on a trajectory toward anchor 5, but not yet at >$100B. |
+| growth_rate | 4 | From Mordor Intelligence's 26.6% CAGR for AI Code Tools 2025-2030 (mordorintelligence.com/industry-reports/artificial-intelligence-code-tools-market) and Gartner's projection that AI software will grow to USD 297.9B by 2027 at 19.1% CAGR (gartner.com/en/documents/4925331), we can infer the AI-developer-platform subsegment is in the 20-30% CAGR range — well above the ~15% anchor-3 bar but below the >40% anchor-5 threshold. |
+| timing | 5 | From the agentic-coding inflection happening in 2025–2026 with Cursor, Claude Code, Copilot, and Gemini CLI all maturing simultaneously (thenewstack.io interview with Dohmke), we can infer a clear-now timing window. |
+| competitive_intensity_inv | 1 | From the developer-platform space being extremely crowded with GitHub, GitLab, JetBrains, Cursor, Cody, Continue, Codium, plus every major AI coding agent shipping its own platform layer (per TechCrunch 2026-02-10 coverage), we can infer maximum competitive intensity. |
+
+**Product (20%)** — raw 3.75 / 5, normalized 68.75, filled 4/4 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From the Checkpoints CLI taking the novel angle of writing agent context (prompts, reasoning, decisions) directly into git rather than a third-party cloud (entire.io product description, thenewstack.io interview), we can infer a meaningfully fresh framing for agentic dev workflow. |
+| technical_moat | 3 | From the launch product being a MIT-licensed open-source CLI git hook (entire.io) without proprietary infrastructure or data moat at launch, we can infer modest technical defensibility; the moat is plausibly being built but not yet visible. |
+| velocity | 5 | From github.com/entireio/cli shipping v0.6.2 nightly builds on 7 of the 8 days between 2026-05-07 and 2026-05-14 plus v0.6.1 stable on 2026-05-07, combined with 23 dated blog posts at entire.io/blog between 2026-02-10 and 2026-05-11 (roughly twice weekly), we can infer weekly shipping cadence at the 5-anchor. |
+| defensibility | 3 | From the integration writing data into customers' own git history (entire.io product description), we can infer modest workflow stickiness but no platform lock-in. |
+
+**Traction (15%)** — _no data_ — normalized 0.00, filled 0/4
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | — | Just launched 2026-02-10; no disclosed customers or revenue. |
+| users_customers | — | No public user/adoption numbers disclosed at launch. |
+| growth_rate | — | Three months post-launch (2026-02-10); no time-series user, install, or revenue figure publicly disclosed. |
+| engagement_retention | — | Three months post-launch; no NRR, churn, return-usage, or active-user retention figure publicly disclosed. |
+
+**Notes:** Launched 2026-02-10. $60M seed at $300M valuation — 'largest seed in dev tools history' per Felicis (TechCrunch 2026-02-10). Lead: Felicis (Aydin Senkut). Founder: Thomas Dohmke, former GitHub CEO. Open-source MIT product. Note: a separate company 'Every.io' also exists in the seed-funded back-office-SaaS space — explicitly excluded based on the entire.io URL.
+
+**Warnings**
+
+- ⚠️ pillar 'traction' has no filled sub-scores; counted as 0
+
+### 4. Beeble — 59.50/100
+
+- **Website:** <https://beeble.ai/>
+- **Stage:** Seed
+- **One-liner:** AI VFX platform whose SwitchLight engine extracts physically-based-rendering passes from video for relighting and compositing, sold as cloud, desktop, and on-prem to film/VFX studios.
+- **Data completeness:** 100%
+
+**Team (40%)** — raw 3.20 / 5, normalized 55.00, filled 5/5 `███████████░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 4 | From CEO/co-founder Hoon Kim and four co-founders being AI researchers with game-development backgrounds (TechCrunch 2024-07-10) building production VFX tooling, we can infer strong domain fit on the technical/research side — though not from a VFX-artist-operator perspective. |
+| technical_depth | 4 | From CEO Hoon Kim (per gnsrla12.github.io) holding an MS in EE from KAIST under Prof. Changho Suh and serving as a Deep Learning Research Scientist + Voice-Synthesis Team lead at Krafton (Dec 2020–Jun 2022) before founding Beeble, the team being five AI researchers from Krafton/Lunit (TechCrunch 2024-07-10), and shipping a 4K video-to-PBR relighting model used in professional Nuke pipelines on Superman & Lois S4 (beeble.ai), we can infer strong applied-ML/graphics depth — held at anchor 4 because no PhD or top-venue (CVPR/SIGGRAPH/NeurIPS) first-author paper trail surfaces for any of the five co-founders to clear the 'PhD/OSS-lead/FAANG-staff' anchor-5 bar. |
+| prior_founding_experience | 1 | From Hoon Kim's personal site (gnsrla12.github.io) and news.aibase.com/news/10169 noting all five Beeble co-founders were prior research scientists at Krafton/Lunit (employee roles, not founder roles) before Beeble in 2022, we can infer first-time founders at the 1-anchor. |
+| team_completeness | 3 | From the founding team being five technical AI researchers (TechCrunch 2024-07-10) with no public commercial/design lead disclosed, we can infer a research-heavy team with a moderate GTM gap. |
+| network_credibility | 4 | From the $4.75M seed being led by Basis Set Ventures with Fika Ventures, Mashup Ventures, and Kakao Ventures participating (TechCrunch 2024-07-10), we can infer credible tier-1-adjacent backing without an a16z/Sequoia lead. |
+
+**Market (25%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 3 | From Grand View Research sizing the virtual production market at USD 2.84B in 2025 → USD 12.25B by 2033 at 20.4% CAGR (grandviewresearch.com/industry-analysis/virtual-production-market) and Grand View Research sizing the in-camera VFX market at USD 665.6M in 2024 → USD 1.35B by 2030 at 12.9% CAGR (grandviewresearch.com/industry-analysis/in-camera-visual-effects-icvfx-market-report), with the broader VFX software market sized in the low single-digit-billions, we can infer a TAM in the low-to-mid-single-digit-billions today on a path to ~$10B — defensible at anchor 3 (~$10B in the trajectory window). |
+| growth_rate | 4 | From MarketsandMarkets projecting virtual production at 33.1% CAGR 2025-2030 (marketsandmarkets.com/Market-Reports/virtual-production-market-264844353.html) and Grand View Research at 20.4% CAGR for the same segment (grandviewresearch.com/industry-analysis/virtual-production-market), we can infer the segment is growing in the 20-33% CAGR range — comfortably above the ~15% anchor-3 bar but below the >40% anchor-5 threshold. |
+| timing | 4 | From generative-AI-for-video maturing to production-grade in 2024–2026 (per beeble.ai/beeble-studio launch and Webby Award 2026), we can infer a strong timing window for AI-relighting tools. |
+| competitive_intensity_inv | 3 | From the general video-AI category having many entrants (Runway, Luma AI, Wonder Dynamics, Adobe Firefly Video) but specialized PBR-aware relighting being narrower (per CG Channel 2024 'tools to watch' framing), we can infer moderate competitive intensity within the relighting niche. |
+
+**Product (20%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From SwitchLight 3.0 outputting PBR passes (albedo, normals, roughness) that integrate into Nuke pipelines rather than baking final pixels (beeble.ai, CineD 2025), we can infer a category-distinct technical angle versus general video-AI tools. |
+| technical_moat | 4 | From the company shipping specialized 4K video-to-PBR neural models with on-prem GPU deployment for VFX studios (beeble.ai/beeble-studio, CineD 2025), we can infer real hard-tech IP defensibility. |
+| velocity | 3 | From three major version releases (SwitchLight 1.0 → 2.0 in 2025-07 → 3.0 in 2025-11 plus SwitchX in 2026-02 per cgchannel.com / cined.com) over roughly three years and Beeble Studio desktop/cloud launches, we can infer roughly monthly-to-quarterly major-release cadence at the anchor-3 ('monthly shipping') level — short of the 'visible weekly shipping cadence with public changelog' anchor 5 and short of even a monthly-changelog anchor 4. |
+| defensibility | 3 | From Nuke integration and on-prem deployment creating production-pipeline embedding (beeble.ai), tempered by the underlying ability of competitors to ship comparable tools, we can infer moderate switching costs. |
+
+**Traction (15%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 4 | From beeble.ai listing professional use on Superman & Lois Season 4 plus 'Oscar-winning facilities' as customers and offering Cloud + Studio paid tiers (beeble.ai/pricing-cloud), we can infer growing ARR with named-tier customers. |
+| users_customers | 4 | From ProductionHUB-reported ~3 million downloads of the free SwitchLight mobile app (productionhub.com/press/86314 — vendor-supplied PR figure, not Sensor Tower-verified) and the value-carrying *professional* tier (Beeble Studio desktop / cloud) deployed on Superman & Lois S4 and 'Oscar-winning facilities' per beeble.ai, we can infer strong design-partner adoption at the pro tier rather than the 1k+ active *paid* users anchor-5 cohort — the 3M figure is dominated by free-mobile curiosity, and no public count of pro-tier seats is disclosed. |
+| growth_rate | 3 | From the major-version cadence (SwitchLight 1.0 → 2.0 2025-07 → 3.0 2025-11 → SwitchX 2026-02 per cgchannel.com and cined.com) and pro-tier roll-out from web to local-GPU desktop as a soft proxy for paying-customer expansion, we can infer above-market growth — no MoM figure disclosed. |
+| engagement_retention | 3 | From SwitchLight being deployed on Superman & Lois S4 (beeble.ai), a paid Studio tier ($500–$3000/yr per cined.com) creating renewal motion, and Beeble citing 'Oscar-winning facilities' as recurring users (no specific studio names disclosed), we can infer 'okay' qualitative retention at the studio tier as a proxy — no NRR or named-recurring-studio list is publicly disclosed. |
+
+**Notes:** Founded 2022 by five AI researchers (game-dev backgrounds at Krafton/Lunit); CEO Hoon Kim (MS KAIST EE under Prof. Changho Suh, ex-Krafton Voice Synthesis Team Lead per gnsrla12.github.io). $4.75M seed 2024-07-10 led by Basis Set Ventures + Fika, Mashup, Kakao at $25M valuation (TechCrunch 2024-07-10). SwitchLight mobile app ~3M downloads (PR-supplied figure, not third-party-verified). Webby Award 2026. Used on Superman & Lois S4.
+
+### 5. BAML — 58.12/100
+
+- **Website:** <https://boundaryml.com/>
+- **Stage:** Seed
+- **One-liner:** Open-source domain-specific language (compiler + multi-language SDKs) for building LLM/agent applications with structured outputs and type safety.
+- **Data completeness:** 94%
+
+**Team (40%)** — raw 3.00 / 5, normalized 50.00, filled 5/5 `██████████░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 4 | From Vaibhav Gupta's LinkedIn (linkedin.com/in/vaigup) and SuperDataScience podcast SDS 859 describing 10 years of AI performance optimization at Google, Microsoft, and D.E. Shaw before founding Boundary, we can infer strong founder-market fit grounded in AI infra experience. |
+| technical_depth | 4 | From github.com/BoundaryML/baml showing a multi-language compiler (Python/TS/Ruby/Java/C#/Rust/Go) primarily authored by Vaibhav Gupta and the founder's decade of AI performance work at Google, Microsoft, and D.E. Shaw (linkedin.com/in/vaigup, SuperDataScience SDS 859), we can infer strong infrastructure engineering depth — defensible at anchor 4 (strong engineers) without yet reaching the world-class FAANG-staff/PhD/OSS-lead 5-anchor. |
+| prior_founding_experience | 1 | From the SuperDataScience SDS 859 interview describing Vaibhav Gupta's 10 prior years as an employee (not founder) at Google/Microsoft/D.E. Shaw and ai.bythebay.io/post/viabhav-gupta noting the YC company pivoted 13 times within itself (Gloo → Boundary/BAML is the same legal entity, not a prior founding), we can infer first-time founders at the 1-anchor. |
+| team_completeness | 3 | From co-founders Vaibhav Gupta and Aaron Villalpando Gonzalez (per Crunchbase profile organization/boundary-technologies-ltd) being two technical UT Austin alumni with no public commercial/design co-founder, we can infer a coverage gap on GTM. |
+| network_credibility | 3 | From Y Combinator W23 backing (ycombinator.com/companies/boundary) plus Twenty Two Ventures and Soma Capital participating in a $500K convertible note (Crunchbase), we can infer top-tier accelerator validation but no named tier-1 VC lead yet. |
+
+**Market (25%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 3 | From Mordor Intelligence sizing the AI Code Tools market at USD 7.37B in 2025 growing to USD 23.97B by 2030 (mordorintelligence.com/industry-reports/artificial-intelligence-code-tools-market) as the closest analyst proxy for LLM dev-tooling, we can infer a TAM near the ~$10B anchor-3 today, well short of the >$100B anchor-5 — the broader Gartner AI software figure ($297.9B by 2027 per gartner.com/en/documents/4925331) is too inclusive to apply directly. |
+| growth_rate | 4 | From Mordor Intelligence's 26.6% CAGR for the AI Code Tools market 2025-2030 (mordorintelligence.com/industry-reports/artificial-intelligence-code-tools-market) and Gartner's 19.1% CAGR for AI software through 2027 (gartner.com/en/documents/4925331), we can infer the BAML-relevant subsegment is growing in the 20-30% range — comfortably above the ~15% anchor-3 bar but below the >40% anchor-5 threshold. |
+| timing | 5 | From AI agent tooling being at peak inflection in 2025–2026 with structured-output / tool-calling being the central reliability challenge (boundaryml.com pitch, SuperDataScience SDS 859), we can infer a clear-now timing window. |
+| competitive_intensity_inv | 2 | From the LLM-framework category being extremely crowded (LangChain, LangGraph, LlamaIndex, AutoGen, CrewAI, Pydantic AI, Instructor, Outlines all competing for the same developer mindshare), we can infer high competitive intensity even with BAML's compiler-DSL differentiation. |
+
+**Product (20%)** — raw 4.25 / 5, normalized 81.25, filled 4/4 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 5 | From BAML being a purpose-built compiler/language with multi-language code generation rather than a Python library wrapper (github.com/BoundaryML/baml README, boundaryml.com), we can infer a category-defining angle that no major competitor shares. |
+| technical_moat | 4 | From the product requiring a hand-rolled compiler with native code generation for 7+ languages (github.com/BoundaryML/baml), we can infer real hard-tech defensibility — though Apache 2.0 licensing limits proprietary moat. |
+| velocity | 5 | From github.com/BoundaryML/baml showing 333 releases with the README explicitly stating weekly shipping cadence and the latest (0.222.0) dated 2026-04-27, we can infer industry-leading shipping velocity. |
+| defensibility | 3 | From BAML being Apache-2.0 OSS (github.com/BoundaryML/baml) but adopters embedding the language across their codebase, we can infer moderate switching costs via integration depth rather than licensing. |
+
+**Traction (15%)** — raw 2.67 / 5, normalized 41.67, filled 3/4 `████████░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 2 | From boundaryml.com listing named users (SAP, Aer Compliance, PMMI, Vetrec) and developer testimonials from Amazon engineers, but no disclosed ARR or paid-tier specifics, we can infer early-stage monetization with adoption signal preceding revenue clarity. |
+| users_customers | 3 | From 8.2k GitHub stars (github.com/BoundaryML/baml) plus boundaryml.com listing user testimonials from SAP, Aer Compliance, PMMI, and Vetrec — all present as names but with paid-customer status (vs. evaluation/free-OSS use) not independently confirmed in third-party press — we can infer early-adopter / individual-developer traction at the anchor-3 level rather than the named-paying-logos anchor-5; 'Amazon engineers' specifically are named individual testimonials, not Amazon as institutional customer. |
+| growth_rate | — | Release-cadence (333 releases per github.com/BoundaryML/baml/releases) is a product-velocity proxy already captured under product.velocity, not a user/revenue growth metric; no MoM download-rate, paid-seat trajectory, or revenue-growth figure is publicly disclosed. |
+| engagement_retention | 3 | From named enterprise users (SAP, Aer Compliance, PMMI, Vetrec) and ongoing Amazon-engineer testimonials on boundaryml.com being repeat-product-mentions over multiple months as a soft proxy for stickiness, we can infer 'okay' retention — no NRR figure disclosed. |
+
+**Notes:** YC W23. Founders Vaibhav Gupta (CEO, ex-Google/MS/D.E. Shaw) and Aaron Villalpando Gonzalez. Funding: $500K convertible note (YC, Twenty Two Ventures, Soma Capital) per Crunchbase; later seed round details not publicly confirmed. OSS Apache 2.0. Pre-product-history: company pivoted ~13 times within the same legal entity (Gloo → Boundary/BAML per ai.bythebay.io/post/viabhav-gupta) — schema-strict 'first-time founder' but with multi-pivot scar tissue inside the current entity.
+
+### 6. Atuin — 55.00/100
+
+- **Website:** <https://atuin.sh/>
+- **Stage:** Seed
+- **One-liner:** Open-source shell history replacement with end-to-end-encrypted sync across machines, plus a desktop 'executable runbooks' product in open beta.
+- **Data completeness:** 94%
+
+**Team (40%)** — raw 3.00 / 5, normalized 50.00, filled 5/5 `██████████░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From Ellie Huxtable (ellie.wtf/projects/atuin) being the original author of the Atuin OSS project since ~2021 and going full-time on it as a company in 2024, we can infer she has lived the problem deeply as the maintainer for years before commercializing. |
+| technical_depth | 5 | From Ellie Huxtable being the primary author and project lead of the atuinsh/atuin Rust codebase (95% Rust, 75 releases through v18.16.1 on 2026-05-12 per github.com/atuinsh/atuin) since ~2021, we can infer OSS-project-lead-level depth that matches the rubric's qualitative 5-anchor. |
+| prior_founding_experience | 1 | From Ellie Huxtable's LinkedIn (linkedin.com/in/elliehuxtable) showing prior employee roles as Infrastructure Lead at PostHog and engineer at Coinbase/Tracr but no prior founded company before Atuin, we can infer first-time founder at the 1-anchor. |
+| team_completeness | 1 | From public sources (atuin.sh, ellie.wtf, Changelog interview #579) showing Ellie as the sole named founder with no commercial or design co-founder visible, we can infer a solo / one-dimensional team at the 1-anchor. |
+| network_credibility | 3 | From PitchBook (profiles/company/756755-65) and public sources listing Generationship and Preston-Werner Ventures as investors, we can infer credible but not tier-1 VC backing — solid devtools-focused seed funds rather than a16z/Sequoia. |
+
+**Market (25%)** — raw 3.00 / 5, normalized 50.00, filled 4/4 `██████████░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 2 | From The Business Research Company sizing the terminal-emulator software market at USD 8.08B in 2024 growing 15.5% CAGR (thebusinessresearchcompany.com/market-insights/terminal-emulator-software-market-2024) as the closest analyst proxy and Atuin addressing only the encrypted-history-sync slice of that, we can infer a TAM of low-single-digit-billions sitting between the <$1B anchor-1 and the ~$10B anchor-3. |
+| growth_rate | 3 | From the broader software-development-tools market growing at 16.12% CAGR 2026–2031 (Mordor Intelligence) and the AI-dev-tools subsegment at 17.32% CAGR (Virtue Market Research) as the closest analyst category for CLI/dev-experience tools, we can infer ~15% CAGR territory at the 3-anchor. |
+| timing | 3 | From the AI-coding boom (Cursor/Claude Code) renewing terminal-tool interest as referenced in the Changelog #579 interview, we can infer a modest tailwind, but the CLI history space has been niche for years. |
+| competitive_intensity_inv | 4 | From the only meaningful direct competitor being McFly (a much smaller OSS project) and shell built-ins, with Atuin sitting at 29.7k GitHub stars vs the field, we can infer near-greenfield positioning within the encrypted-history-sync category. |
+
+**Product (20%)** — raw 3.75 / 5, normalized 68.75, filled 4/4 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From atuin.sh promising 'encrypted sync across machines' plus the new Atuin Desktop 'executable runbooks' product chaining shell + SQL + HTTP, we can infer a clear angle beyond plain history search. |
+| technical_moat | 3 | From the architecture being mostly OSS Rust + SQLite + a sync server (github.com/atuinsh/atuin), we can infer the technical pieces are replicable but the existing 220M+ synced records create data gravity. |
+| velocity | 5 | From github.com/atuinsh/atuin showing 75 releases and the most recent (v18.16.1) dated 2026-05-12 — two days before this scoring session — we can infer near-weekly shipping cadence. |
+| defensibility | 3 | From history data being individually exportable but synced state creating user inertia (per atuin.sh feature description), we can infer modest switching costs. |
+
+**Traction (15%)** — raw 3.33 / 5, normalized 58.33, filled 3/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 2 | From atuin.sh stating the CLI is free OSS while the proprietary Atuin Hub powers paid Desktop sync, and no disclosed paying-customer count, we can infer monetization is early-stage — pilots/users exist but revenue scale is unclear. |
+| users_customers | 5 | From third-party install analytics — Homebrew formula `atuin` reporting 26,738 installs in the trailing 30 days and 128,482 in 365 days (formulae.brew.sh/api/formula/atuin.json, fetched 2026-05-14) and crates.io showing 128,532 cumulative downloads of the `atuin` crate (crates.io/crates/atuin) — we can infer an active install base well past the 1k-active-users 5-anchor on third-party data alone, independent of the company's own '200,000+ developers' marketing claim. |
+| growth_rate | — | No MoM rate is publicly disclosed; cumulative star-counts and total install figures cannot be transformed into a defensible MoM growth rate without trailing-period install/download deltas the company has not published. |
+| engagement_retention | 3 | From atuin.sh's '220M+ synced records' and '200,000+ developers' figures persisting across release notes (atuin.sh + Changelog #579) as a soft daily-use stickiness proxy, we can infer 'okay' retention — proxy-based, no NRR or DAU disclosed. |
+
+**Notes:** London-based, founded as a company 2024; OSS project started ~2021. Investors: Generationship, Preston-Werner Ventures (per PitchBook). Solo founder (Ellie Huxtable). Funding amount not publicly disclosed.
+
+### 7. Hallway — 35.79/100
+
+- **Website:** <https://hallway.ai/>
+- **Stage:** Seed
+- **One-liner:** Embeddable AI 'character mascot' that companies drop into their product to guide users, answer questions, and boost activation; multi-LLM (Gemini/Claude/GPT) with a managed knowledge base.
+- **Data completeness:** 82%
+
+**Team (40%)** — raw 2.60 / 5, normalized 40.00, filled 5/5 `████████░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 3 | From founders Bryan Pratte and Brett Koonce having co-built QuarkWorks (a mobile-development consultancy embedding software into client products, per Redbud VC's investment memo medium.com/redbudvc/why-we-invested-in-hallway) and then pivoting Hallway from v-tuber avatars to embeddable product mascots, we can infer adjacent but not directly-lived fit. |
+| technical_depth | 3 | From Brett Koonce's USC film + Missouri CS background with mobile + ML expertise and Bryan Pratte's EE degree (per Redbud VC memo), we can infer a credible technical pairing without explicit FAANG-staff/PhD/OSS-lead signals. |
+| prior_founding_experience | 3 | From Bryan Pratte previously founding QuarkWorks (a profitable mobile-dev consultancy, not a venture-backed exit per Crunchbase person profile crunchbase.com/person/bryan-pratte-90d3), we can infer real prior founding experience well short of a $100M exit. |
+| team_completeness | 2 | From only two co-founders being publicly named (Crunchbase organization/hallway-dea3) with no commercial/design lead disclosed, we can infer a one-dimensional team. |
+| network_credibility | 2 | From Redbud VC leading the seed via Cohort III (medium.com/redbudvc/why-we-invested-in-hallway) as the only named institutional investor and the company being based in Columbia, Missouri rather than a tier-1 hub, we can infer modest network credibility. |
+
+**Market (25%)** — raw 2.50 / 5, normalized 37.50, filled 4/4 `████████░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 2 | From the embeddable-product-mascot framing being a narrow slice of the broader conversational-AI/in-product-help market (per hallway.ai use-case framing), we can infer a small TAM closer to the <$1B end than mainstream chatbot categories. |
+| growth_rate | 3 | From in-product AI experiences growing alongside the broader generative-AI wave but mascot-character-specifically lacking dedicated analyst tracking, we can infer ordinary above-market growth — neither flat nor clearly >40%. |
+| timing | 3 | From AI personas/characters being culturally salient (Character.ai, Replika) but no clear B2B-mascot inflection visible in public data, we can infer a moderate timing window. |
+| competitive_intensity_inv | 2 | From the broader in-product-help / character-AI category being saturated with Intercom Fin, HubSpot Breeze, Drift, Character.ai, Inworld AI, plus every major SaaS shipping native AI agents in their own product, we can infer high competitive intensity — the narrow 'mascot for your product' niche framing isn't durable on a 3-5-year horizon, so the score sits at anchor 2 rather than the niche-narrowed anchor 3. |
+
+**Product (20%)** — raw 2.33 / 5, normalized 33.33, filled 3/4 `███████░░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 3 | From hallway.ai bundling avatar identity + voice + knowledge base + low-latency multi-LLM into a drop-in widget (vs general chatbot tools), we can infer modest differentiation through packaging. |
+| technical_moat | 2 | From hallway.ai supporting third-party LLMs (Gemini/Claude/GPT) rather than proprietary models and the avatar/voice/character primitives being available across many providers, we can infer thin technical moat. |
+| velocity | — | No public changelog, blog, or GitHub release surface visible on hallway.ai; release cadence not assessable from the free public web. |
+| defensibility | 2 | From the integration being a script tag with a portable knowledge base (per hallway.ai deployment description), we can infer low switching costs. |
+
+**Traction (15%)** — raw 2.00 / 5, normalized 25.00, filled 2/4 `█████░░░░░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 2 | From hallway.ai's 'Characters in Action' section listing Neopets, Pointhound, CHKK, TerraZero, Basis Set, and Azuki as deployments (verified via direct page fetch 2026-05-14; web3wire.org/blockchain/terrazero-announces-intraverse-ai-integration corroborates TerraZero/Intraverse — note Hallway's investor is Redbud VC per Cohort III memo, not Basis Set, so the Basis Set listing is plausibly a customer rather than an investor mislabeling), with no disclosed ARR or paid-vs-pilot status, we can infer early monetization with a handful of named logos. |
+| users_customers | 2 | From hallway.ai listing six named deployments (Neopets, Pointhound, CHKK, TerraZero, Basis Set, Azuki — verified via direct page fetch 2026-05-14) and no public user-count disclosure, we can infer a small early-stage design-partner cohort at the anchor 2. |
+| growth_rate | — | No public MoM growth figure; hallway.ai discloses no user/customer time series. |
+| engagement_retention | — | No NRR, churn, or DAU figure publicly disclosed; the only public signal is the small customer logo list which is insufficient to back into a retention number. |
+
+**Notes:** Columbia, Missouri-based per Crunchbase. Co-founders Bryan Pratte (CEO, ex-QuarkWorks) and Brett Koonce (CTO). Redbud VC seed (Cohort III) — amount not publicly disclosed. Pivoted from v-tuber avatar tooling to product-mascot AI per Redbud's investment memo. THIN public profile — limited press coverage; many traction/team fields kept null.
+
+### 1. Mem0 — 81.92/100
+
+- **Website:** <https://mem0.ai/>
+- **Stage:** Series A
+- **One-liner:** Open-source memory infrastructure for LLM agents that persists context across sessions, offered as a cloud API and self-hosted library.
+- **Data completeness:** 94%
+
+**Team (30%)** — raw 4.20 / 5, normalized 80.00, filled 5/5 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From the TechCrunch announcement (2025-10-28) noting CEO Taranjeet Singh created Embedchain (an OSS predecessor for AI data indexing) and CTO Deshraj Yadav came from Tesla's ML team, we can infer they built Mem0 directly out of operating the exact memory/RAG pain at scale. |
+| technical_depth | 5 | From github.com/mem0ai/mem0 showing 55.7k stars and 319 releases, combined with Taranjeet's prior popular Embedchain OSS project (per Y Combinator profile and TechCrunch 2025-10-28), we can infer OSS-lead-level depth well past the 10k-stars 5-anchor. |
+| prior_founding_experience | 3 | From Taranjeet being a founder-adjacent operator — first growth engineer at Khatabook (YC S18 unicorn) — and the creator/maintainer of the popular Embedchain OSS project (per ycombinator.com/companies/mem0 and TechCrunch 2025-10-28), we defend a 3 on 'founder-adjacent operator with productized OSS track record' rather than the strict prior-venture-backed-exit reading; no prior $100M+ exit exists, so this is the high bound of anchor 3 rather than anchor 4. |
+| team_completeness | 3 | From public sources (TechCrunch 2025-10-28, ycombinator.com/companies/mem0) showing two technical co-founders without a named commercial/design lead, we can infer technical strength with a moderate GTM gap. |
+| network_credibility | 5 | From the Series A being led by Basis Set Ventures with Peak XV Partners, GitHub Fund, Kindred Ventures (seed lead), and Y Combinator participating (TechCrunch 2025-10-28), we can infer top-tier VC backing across two rounds — easily clearing the 5-anchor. |
+
+**Market (25%)** — raw 4.00 / 5, normalized 75.00, filled 4/4 `███████████████░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From Grand View Research sizing the AI Agents market at USD 7.63B in 2025 reaching USD 182.97B by 2033 (grandviewresearch.com/industry-analysis/ai-agents-market-report) and Gartner's 2025-08-26 release projecting 40% of enterprise apps will embed task-specific AI agents by 2026 with USD 15B in agent management platform spend by 2029 (gartner.com/en/newsroom/press-releases/2025-08-26), we can infer the agent-infrastructure TAM is in the multi-tens-of-billions on a 5-7-year horizon — past the ~$10B anchor-3 but short of the >$100B anchor-5 today. |
+| growth_rate | 5 | From Grand View Research's 49.6% CAGR for AI Agents 2026-2033 (grandviewresearch.com/industry-analysis/ai-agents-market-report) and Precedence Research's 43.84% CAGR for the broader Agentic AI market (precedenceresearch.com/agentic-ai-market), we can infer category growth comfortably above the >40% CAGR 5-anchor. |
+| timing | 5 | From AI agents reaching production-grade adoption in 2025–2026 (AWS Strands SDK launch, AgentCore release referenced in aws.amazon.com/bedrock/agentcore) and persistent memory being the central unsolved problem, we can infer a clear-now inflection. |
+| competitive_intensity_inv | 2 | From competitors including Letta (formerly MemGPT), LangMem, Zep, Cognee, and native memory in AWS Bedrock AgentCore (per AI Agent Index 2026 review and dev.to/sudarshangouda comparison), we can infer high competitive intensity in agent memory. |
+
+**Product (20%)** — raw 4.25 / 5, normalized 81.25, filled 4/4 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From Mem0 being the exclusive memory provider for AWS Strands SDK (mem0.ai/blog/aws-and-mem0-partner-to-bring-persistent-memory) and offering multi-level memory (user/session/agent state) per github.com/mem0ai/mem0, we can infer strong differentiation via cloud-platform distribution. |
+| technical_moat | 4 | From the AWS strategic partnership creating distribution moat, the proprietary cloud memory infrastructure handling 186M+ API calls (mem0.ai/series-a), and HIPAA/SOC2 compliance posture (mem0.ai), we can infer real defensibility even with Apache 2.0 OSS core. |
+| velocity | 5 | From github.com/mem0ai/mem0 showing 319 releases with the most recent (@mem0/cli v0.2.5) dated 2026-05-14 — the day of this scoring — we can infer industry-leading shipping cadence. |
+| defensibility | 4 | From the AWS Strands SDK exclusivity (mem0.ai/blog/aws-and-mem0-partner) plus accumulated user/agent memory state being non-trivial to migrate, we can infer strong lock-in even on top of an OSS license — though the partnership-exclusivity portion is contractual rather than structural and could lapse on renewal, so the moat is partly conditional. |
+
+**Traction (25%)** — raw 4.67 / 5, normalized 91.67, filled 3/4 `██████████████████░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 4 | From mem0.ai/series-a citing 'thousands of teams from fastest-growing startups to Fortune 500 in production,' a named TrendMicro deployment (aws.amazon.com/blogs/machine-learning/company-wise-memory-in-amazon-bedrock-with-amazon-neptune-and-mem0), and a tiered pricing model ($19/$249/Enterprise), we can infer growing ARR with named logos. |
+| users_customers | 5 | From 90,000+ developers (mem0.ai), 14M Python-package downloads, 55.7k GitHub stars (github.com/mem0ai/mem0), and Fortune 500 deployments (TrendMicro), we can infer user/customer scale comfortably past the 5-anchor. |
+| growth_rate | 5 | From API calls growing 35M → 186M in two quarters of 2025 (mem0.ai/series-a, ~250% per quarter compound) and Series A doc framing, we can infer growth well above the 20% MoM 5-anchor. |
+| engagement_retention | — | API-call growth (35M → 186M Q1→Q3 2025 per mem0.ai/series-a) cannot separate new-logo expansion from existing-logo retention; no per-cohort retention, NRR, or churn figure is publicly disclosed. |
+
+**Notes:** $24M total raised: $3.9M seed led by Kindred Ventures + $20M Series A led by Basis Set Ventures, with Peak XV, GitHub Fund, and YC (TechCrunch 2025-10-28). Exclusive memory provider for AWS Strands Agents SDK. Native integrations with CrewAI, Flowise, Langflow.
+
+### 2. Parasail — 74.06/100
+
+- **Website:** <https://www.parasail.io/>
+- **Stage:** Series A
+- **One-liner:** Pay-per-token AI inference 'supercloud' that orchestrates GPU capacity across many third-party data centers, with day-zero support for frontier open models.
+- **Data completeness:** 100%
+
+**Team (30%)** — raw 4.00 / 5, normalized 75.00, filled 5/5 `███████████████░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From TechCrunch (2026-04-15) noting CEO Mike Henry previously co-founded Mythic (the analog AI-inference chip company that raised ~$165M) and co-founder Tim Harris co-founded Swift Navigation (raised $249.2M total per Tracxn, latest a Series E in early 2025), we can infer they have lived AI-inference economics from the silicon and capital-formation side. |
+| technical_depth | 4 | From Mike Henry's track record building Mythic's analog AI chip and Tim Harris's deep-tech GNSS work at Swift Navigation (SiliconAngle/TechCrunch 2026-04-15), plus Parasail serving 500B+ tokens/day across a multi-DC GPU mesh (parasail.io), we can infer strong founder-level systems experience — defensible at anchor 4 (strong engineers) but short of the IC-archetype 5-anchor (ex-FAANG staff+, PhD, OSS lead) since no CTO/principal-eng IC bench is publicly named beyond founders, Head of Product Matthew Carnali, and Fractional CMO Dena Nejad (rocketreach.co/parasail-management_b6db2d5ac7183136). |
+| prior_founding_experience | 3 | From Mike Henry having co-founded Mythic ($165M raised; the company ran out of money in November 2022 and was recapitalized with a new CEO per The Register 2022-11-09 and TechCrunch 2023-03-09 — no exit) and Tim Harris co-founding Swift Navigation (still independent and operating with $249.2M total raised through Series E per Tracxn — also no exit), we can infer experienced repeat founders without confirmed $100M+ exits, putting both at the anchor-3 'prior startup, no exit' tier. |
+| team_completeness | 4 | From RocketReach (rocketreach.co/parasail-management_b6db2d5ac7183136) and parasail.io showing Mike Henry (CEO/co-founder), Tim Harris (co-founder/board), Dena Nejad (Fractional CMO), and Matthew Carnali (Head of Product) covering engineering + product + marketing, we can infer broad functional coverage with only a fractional rather than full-time commercial chief. |
+| network_credibility | 4 | From the $32M Series A jointly led by Touring Capital and Kindred Ventures with Samsung Electronics' startup arm participating (PRNewswire 2026, TechCrunch 2026-04-15), we can infer strong VC backing — credible firms but not the a16z/Sequoia top tier. |
+
+**Market (25%)** — raw 3.75 / 5, normalized 68.75, filled 4/4 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 5 | From Grand View Research sizing the AI inference market at USD 97.24B in 2024 with 17.5% CAGR through 2030 (grandviewresearch.com/industry-analysis/artificial-intelligence-ai-inference-market-report) and Gartner's 2025-10-15 release that AI-optimized IaaS will hit USD 37.5B in 2026 with 65%+ supporting inference workloads by 2029 (gartner.com/en/newsroom/press-releases/2025-10-15), we can infer the AI inference TAM is comfortably past the $100B 5-anchor today. |
+| growth_rate | 4 | From Grand View Research's 17.5% CAGR for AI inference 2025-2030 and MarketsandMarkets' 19.2% CAGR figure for the same segment ($106.15B 2025 → $254.98B by 2030, marketsandmarkets.com/Market-Reports/ai-inference-market-189921964.html) — both well above the ~15% anchor-3 bar but below the >40% anchor-5 threshold — we can infer the inference subsegment is in the high-teens-to-low-20s CAGR territory at anchor 4. |
+| timing | 5 | From inference-cost optimization being the dominant economic pressure on AI deployment in 2025–2026 (per TechCrunch 2026-04-15), we can infer a clear-now inflection. |
+| competitive_intensity_inv | 1 | From the inference-cloud space being extremely crowded with Together AI, Fireworks AI, Replicate, Modal, RunPod, Lambda Labs, Anyscale, Groq, Cerebras, plus AWS Bedrock and Vertex AI (per SiliconAngle 2026-04-15), we can infer commoditized competitive intensity at the low end of the inversion scale. |
+
+**Product (20%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From parasail.io's positioning as a multi-DC orchestration 'supercloud' (no owned silicon, up-to-30× cheaper, day-0 frontier-model support across 15+ countries) per parasail.io and TechCrunch 2026-04-15, we can infer a distinctive aggregation-layer angle versus single-cloud inference providers. |
+| technical_moat | 4 | From the orchestration layer requiring routing, scheduling, and capacity-arbitrage across heterogeneous GPU pools at 500B+ tokens/day scale (parasail.io), we can infer real systems moat plus supply-side network effects, though no proprietary IP is claimed. |
+| velocity | 3 | From docs.parasail.io documenting major new surfaces (Dedicated Endpoints 2025-11-02, Batch API drop-in for OpenAI 2026-02-09, Community/SillyTavern integration 2026-02-11) at roughly monthly cadence over the post-launch year, we can infer monthly shipping at the 3-anchor. |
+| defensibility | 3 | From inference being commoditized via OpenAI-compatible APIs (parasail.io product surface), we can infer low switching costs — workflow integrations and reserved capacity provide only modest stickiness. |
+
+**Traction (25%)** — raw 4.50 / 5, normalized 87.50, filled 4/4 `██████████████████░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 5 | From parasail.io publicly listing named paying customers (Elicit, Rasa, Oumi, Weights & Biases) on a pay-per-token model AND TechCrunch 2026-04-15 explicitly reporting Parasail at '30% month-over-month revenue growth' (techcrunch.com/2026/04/15/parasail-raises-32m-to-feed-tokenmaxxing-ai-developers), we can infer growing ARR with named logos that clears the 5-anchor. |
+| users_customers | 4 | From named enterprise/AI-native logos (Elicit screening 100k+ papers/day, Weights & Biases, Rasa, Oumi on parasail.io), we can infer strong design-partner adoption, though no developer-count figure is disclosed. |
+| growth_rate | 5 | From TechCrunch 2026-04-15 explicitly reporting Parasail achieving '30% month-over-month revenue growth' (techcrunch.com/2026/04/15/parasail-raises-32m-to-feed-tokenmaxxing-ai-developers), we can infer growth comfortably past the >20% MoM 5-anchor. |
+| engagement_retention | 4 | From TechCrunch's 2026-04-15 framing of Parasail's 'no long-term contracts' positioning as a retention-positive — customers like Elicit, mem0, Gravity, Kotoba, Venice, W&B, Rasa, and Oumi continuing to grow usage despite contractual freedom — we can infer strong qualitative retention; no NRR figure disclosed. |
+
+**Notes:** Founded 2023, came out of stealth 2025. $42M total raised; $32M Series A 2026-04-15 led by Touring Capital + Kindred Ventures, Samsung startup arm participating. Founders: Mike Henry (ex-Mythic CEO; Mythic ran out of cash 2022-11 and was recapitalized under new CEO Dave Fick per The Register / TechCrunch) and Tim Harris (still CEO of Swift Navigation, which raised a $50M Series E in early 2025 and remains independent — not an exit). 500B+ tokens/day across 15+ country GPU footprint.
+
+### 3. Tigris Data — 72.46/100
+
+- **Website:** <https://www.tigrisdata.com/>
+- **Stage:** Series A
+- **One-liner:** Globally-distributed, S3-compatible object storage service built atop Fly.io infrastructure, with no egress fees, targeting AI workloads.
+- **Data completeness:** 94%
+
+**Team (30%)** — raw 3.80 / 5, normalized 70.00, filled 5/5 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From the Tigris about page (tigrisdata.com/about) stating the three co-founders were 'the former Uber storage team' who 'built and operated the company's global storage platform, scaling projects like Docstore, Herb, and DBEvents to hundreds of billions of requests daily,' we can infer they lived this exact problem at hyperscale. |
+| technical_depth | 4 | From the founders having built Uber's global storage platform (Docstore/Herb/DBEvents) at hundreds-of-billions-requests-per-day scale per tigrisdata.com/about, we can infer strong infrastructure engineering depth, though without an explicit FAANG staff/principal title or OSS-lead signal it falls short of a 5. |
+| prior_founding_experience | 1 | From Crunchbase and ProPakistani's 2025-10-10 founder profile (propakistani.pk/2025/10/10/pakistani-origin-founder-ovais-tariq-raises-25-million-to-take-on-big-cloud) plus Himank Chaudhary's LinkedIn (linkedin.com/in/himankchaudhary) showing both co-founders went directly from Uber/Yahoo engineering roles to Tigris with no prior founded company, we can infer first-time founders at the 1-anchor. |
+| team_completeness | 4 | From the tigrisdata.com/about team page showing ~20 employees across three technical co-founders (CEO/CTO/Chief Architect), four founding engineers, and leadership roles, we can infer broad coverage with only a thin commercial/GTM bench. |
+| network_credibility | 5 | From the a16z-led seed (a16z.com/announcement/investing-in-tigris, 2024-03-14) followed by a $25M Series A led by Spark Capital with a16z, Basis Set, and General Catalyst participating (TechCrunch, 2025-10-09), we can infer top-tier VC backing across two rounds. |
+
+**Market (25%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From Emergen Research's Cloud Object Storage Market report sizing the segment at USD 8.6B in 2024 growing to USD 36.4B by 2034 (emergenresearch.com/industry-report/cloud-object-storage-market) plus Gartner's 2025-08-06 release that worldwide IaaS public cloud services hit USD 199.0B in 2024 (gartner.com/en/newsroom/press-releases/2025-08-06), we can infer the addressable cloud-storage TAM sits in the multi-tens-of-billions today and clears the ~$10B anchor-3 threshold but remains short of the >$100B anchor-5 threshold. |
+| growth_rate | 3 | From Emergen Research (cloud object storage 15.3% CAGR 2024-2034, emergenresearch.com/industry-report/cloud-object-storage-market) and Gartner's 2025-08-06 IaaS-grew-22.5%-in-2024 figure (gartner.com/en/newsroom/press-releases/2025-08-06), we can infer the storage segment is in the ~15-22% CAGR range — solidly above flat but well below the >40% anchor-5 threshold. |
+| timing | 5 | From TechCrunch (2025-10-09) and the a16z thesis post (a16z.com/announcement/investing-in-tigris) framing the moment as an egress-fee backlash + AI inference data-locality inflection, we can infer this is a clear 'now' moment for distributed S3 alternatives. |
+| competitive_intensity_inv | 2 | From the space being dominated by AWS S3, Google Cloud Storage, Azure Blob, Cloudflare R2, and Backblaze B2 (all referenced in SiliconAngle and TechCrunch's 2025-10-09 coverage), we can infer high competitive intensity — a wedge exists but the category is crowded with deep-pocketed incumbents. |
+
+**Product (20%)** — raw 4.00 / 5, normalized 75.00, filled 4/4 `███████████████░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From tigrisdata.com positioning around no-egress-fee + globally-distributed S3-compatible storage and TechCrunch's (2025-10-09) framing of automatic regional data placement, we can infer a sharp wedge against S3's region-pinned + egress-charged model. |
+| technical_moat | 4 | From the architecture being built on Fly.io's global anycast network plus a FoundationDB-backed metadata layer (a16z.com/announcement/investing-in-tigris), we can infer real hard-tech depth, though the building blocks are OSS and replicable in principle. |
+| velocity | 5 | From tigrisdata.com/blog showing 10+ shipped releases between 2026-02-24 and 2026-05-05 (Agent Skills Library 02-24, CLI release 03-03, Partner Integration API 03-10, Multi-Region Buckets 03-24, public-bucket domains 04-02, Agent Plugins 04-07, Agent Kit 04-28, S2 streams 05-05), we can infer near-weekly shipping cadence at the 5-anchor. |
+| defensibility | 3 | From the product being S3-API-compatible by design (per tigrisdata.com/docs/overview), we can infer switching costs are intentionally low — data gravity provides modest lock-in but customers can leave back to S3 with minimal app changes. |
+
+**Traction (25%)** — raw 4.33 / 5, normalized 83.33, filled 3/4 `█████████████████░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 4 | From SiliconAngle (2025-10-09) citing 'more than 4,000 customers' and named logo Fal.ai (fly.io/customer-stories/Tigris), we can infer paying revenue with a named-logo flywheel, even though no specific ARR is disclosed. |
+| users_customers | 5 | From SiliconAngle (2025-10-09) reporting 4,000+ customers, we can infer the user base sits well past the 1k-active-users 5-anchor. |
+| growth_rate | 4 | From SiliconAngle (2025-10-09) reporting Tigris 'has grown 8x every year since its founding' — which compounds to ≈19% MoM, sitting just below the >20% MoM anchor-5 threshold — we can infer sustained high-teens MoM growth that clears the ~5% MoM anchor-3 bar but stops short of anchor 5. |
+| engagement_retention | — | No public NRR, cohort-retention, or DAU figure is disclosed; the only available proxy is the company's 8x YoY growth figure (SiliconAngle 2025-10-09), which cannot separate new-logo expansion from existing-logo retention and is therefore not a defensible retention signal. |
+
+**Notes:** Seed led by a16z (Martin Casado), 2024-03; Series A $25M led by Spark Capital with a16z/Basis Set/General Catalyst, 2025-10 (TechCrunch). Customers include Fal.ai.
+
+### 4. Flint — 64.19/100
+
+- **Website:** <https://flintk12.com/>
+- **Stage:** Series A
+- **One-liner:** AI-powered personalized learning platform for K-12 schools, serving teachers, students, and administrators with subject-specific tutoring, lesson planning, and oversight tools.
+- **Data completeness:** 94%
+
+**Team (30%)** — raw 3.60 / 5, normalized 65.00, filled 5/5 `█████████████░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 3 | From CEO Sohan Choudhury's prior company being Gatherly (virtual events, not K-12) per AlleyWatch 2025-11 and his LinkedIn, we can infer focused founder energy but no prior K-12 operating background. |
+| technical_depth | 4 | From Sohan Choudhury's Georgia Tech CS / Stamps Presidential Scholar background plus prior CTO role at Gatherly and Amazon engineering tenure (linkedin.com/in/sohan-choudhury), we can infer strong technical depth one notch short of FAANG-staff/OSS-lead 5-anchor. |
+| prior_founding_experience | 4 | From Sohan co-founding Gatherly (~250k users, $2M revenue, $3M+ raised, customers including Google/MIT, ultimately acquired per AlleyWatch 2025-11), we can infer a real prior founding cycle with exit — though acquisition price was undisclosed and not confirmed at $100M+. |
+| team_completeness | 3 | From public sources (ycombinator.com/companies/flint-2, theorg.com/org/flintk12) showing two technical co-founders (Sohan Choudhury, Jinseo Park) and a small team, we can infer founder-led GTM coverage but unclear depth across functions. |
+| network_credibility | 4 | From the Series A co-led by Patron with Y Combinator (S23), Afore Capital, AME Cloud Ventures, USC Viterbi, and angel investor Matt Pittinsky (Blackboard founder) participating per flintk12.com/blog/series-a and AlleyWatch 2025-11, we can infer strong but not tier-1-led network. |
+
+**Market (25%)** — raw 3.75 / 5, normalized 68.75, filled 4/4 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From HolonIQ projecting the K-12 Digital Instruction & Assessment market at USD 42.5B by 2025 at a 17% CAGR with the U.S. representing 40%+ of global spend (holoniq.com/notes/k-12-digital-instruction-and-assessment-market-to-reach-42b-by-2025), we can infer a TAM in the multi-tens-of-billions — well past the ~$10B anchor-3 but below the >$100B anchor-5. |
+| growth_rate | 4 | From HolonIQ's 17% CAGR figure for the K-12 Digital Instruction & Assessment market through 2025 (holoniq.com/notes/k-12-digital-instruction-and-assessment-market-to-reach-42b-by-2025) and HolonIQ's broader EdTech 16.3% CAGR through 2025 (holoniq.com/notes/global-education-technology-market-to-reach-404b-by-2025), we can infer the addressable category is growing in the high-teens CAGR range — above the ~15% anchor-3 bar but short of the >40% anchor-5 threshold. |
+| timing | 5 | From schools moving rapidly from AI bans to formal AI deployment in 2024–2026 (per EdTech Digest 2025-11-19 framing of 'AI-native generation'), we can infer a clear-now inflection. |
+| competitive_intensity_inv | 2 | From the K-12 AI-tutor space being crowded with Khanmigo, MagicSchool, SchoolAI, Curipod, plus ChatGPT EDU and incumbent LMS vendors building AI features (per ASU+GSV 2025 ecosystem coverage), we can infer high competitive intensity. |
+
+**Product (20%)** — raw 2.75 / 5, normalized 43.75, filled 4/4 `█████████░░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 3 | From flintk12.com positioning across teacher / student / admin personas (multi-stakeholder) versus more single-persona competitors, we can infer modest differentiation but not category-defining. |
+| technical_moat | 2 | From the product being a teacher-and-student-facing wrapper over state-of-the-art LLMs (per flintk12.com) without proprietary models or unique data network effects disclosed, we can infer thin technical moat. |
+| velocity | 3 | From flintk12.com/whats-new showing five monthly product-update entries between 2026-01-08 and 2026-05-07 (Gradebook 01-08, Sparky-vision 02-12, Video generation 03-02, Learning reports 04-02, Slide generation + rubrics 05-07), we can infer exactly-monthly shipping cadence at the 3-anchor. |
+| defensibility | 3 | From the platform requiring LMS integration, district-level rollout, and staff training (per flintk12.com administrator features), we can infer moderate institutional switching costs once deployed. |
+
+**Traction (25%)** — raw 4.00 / 5, normalized 75.00, filled 3/4 `███████████████░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 4 | From flintk12.com citing 400,000+ daily users across hundreds of schools and AlleyWatch 2025-11 disclosing a partnership with Cognita covering 95,000 students across 110 schools, we can infer named-logo institutional ARR with paid school contracts. |
+| users_customers | 5 | From 400,000+ users across hundreds of schools (flintk12.com, EdTech Digest 2025-11-19), we can infer scale well past the 1k-user 5-anchor. |
+| growth_rate | — | The two cited counts are not apples-to-apples — '400,000+ daily users' (flintk12.com, 2025-11) is a DAU figure while '500,000+ educators and students' (flintk12.com homepage 2026-05) is a cumulative-account figure; without a consistent metric (DAU→DAU or paid-seat→paid-seat) the implied MoM cannot be defended. |
+| engagement_retention | 3 | From the Cognita district-level contract (95,000 students across 110 schools per AlleyWatch 2025-11) and institutional LMS-integration / staff-training friction (flintk12.com administrator features) creating annual-contract stickiness as a qualitative proxy, we can infer 'okay' retention — but procurement inertia is not the same as NRR/cohort retention, and no renewal-rate or NRR figure is publicly disclosed. |
+
+**Notes:** Founded 2023, YC S23. $16.7M total raised; $15M Series A co-led by Patron (flintk12.com/blog/series-a, AlleyWatch 2025-11). Cognita partnership covers 95k students / 110 schools. Co-founders Sohan Choudhury (CEO) and Jinseo Park.
+
+### 1. Vizcom — 70.25/100
+
+- **Website:** <https://vizcom.com/>
+- **Stage:** Series B
+- **One-liner:** AI-powered design platform for industrial designers that turns sketches into high-fidelity 3D renders and supports text-driven iteration, animation, and 3D-model integration.
+- **Data completeness:** 94%
+
+**Team (20%)** — raw 3.80 / 5, normalized 70.00, filled 5/5 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From CEO Jordan Taylor's LinkedIn (linkedin.com/in/jordan-taylor-4490797a) and Index Ventures' announcement (indexventures.com/perspectives/inside-vizcoms-vision) showing he was an industrial/automotive designer at Honda and then NVIDIA before founding Vizcom, we can infer he lived the rendering-bottleneck problem firsthand. |
+| technical_depth | 4 | From co-founder/CTO Kaelan Richards's software-engineering background combined with shipping a 3D-aware generative-AI design product (vizcom.com), we can infer strong applied-ML/3D-graphics depth; no FAANG-staff or OSS-lead signal puts it short of 5. |
+| prior_founding_experience | 1 | From Jordan Taylor's LinkedIn (linkedin.com/in/jordan-taylor-4490797a) showing a Honda → NVIDIA industrial-design path with no prior founded company, and no Crunchbase/theorg founding history disclosed for Kaelan Richards (theorg.com/org/vizcom), we can infer first-time founders at the 1-anchor. |
+| team_completeness | 4 | From the design-CEO + engineer-CTO complementary pairing plus a $52M+ total raise that funds enterprise GTM (vizcom.com/blog/vizcom-raises-series-a-funding, radical.vc/building-the-future-of-industrial-design), we can infer broad functional coverage. |
+| network_credibility | 5 | From the seed led by Unusual Ventures, Series A led by Index Ventures, and Series B led by Radical Ventures (vizcom.com/blog and radical.vc), we can infer a top-tier VC stack across three rounds — Index is unambiguously tier-1. |
+
+**Market (25%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 3 | From Fortune Business Insights sizing 3D CAD software at USD 11.73B in 2024 → USD 19.15B by 2032 at 6.4% CAGR (fortunebusinessinsights.com/3d-cad-software-market-108987) and Grand View Research / MarketsandMarkets sizing virtual production at USD 2.1-2.84B in 2025 (marketsandmarkets.com/Market-Reports/virtual-production-market-264844353.html, grandviewresearch.com/industry-analysis/virtual-production-market) — Vizcom's industrial-design + 3D-rendering wedge — we can infer a TAM in the low-double-digit-billions, anchored at ~$10B (anchor 3) rather than the multi-tens-of-billions implied earlier. |
+| growth_rate | 4 | From MarketsandMarkets' 33.1% CAGR for virtual production 2025-2030 (marketsandmarkets.com/Market-Reports/virtual-production-market-264844353.html) and the AI Image Generator Market's 38.2% CAGR (USD 8.7B in 2024 → USD 60.8B by 2030 per MarketsandMarkets), partially offset by the slower 6.4% CAGR for the underlying 3D CAD software base, we can infer the gen-AI-design subsegment Vizcom occupies is growing in the 25-35% range — well above anchor 3 (~15%) but below the >40% anchor 5. |
+| timing | 5 | From generative AI for visual content reaching production-grade quality in 2023–2026 and major industrial brands actively deploying it (Ford, Honda, Sonos, Dell per vizcom.com), we can infer a clear-now inflection. |
+| competitive_intensity_inv | 2 | From the AI design tooling space being crowded with Adobe Firefly, Midjourney, Krea, Recraft, plus incumbent CAD vendors (Autodesk, Adobe) shipping AI features (referenced across pulse2.com and maginative.com coverage), we can infer high competitive intensity though Vizcom's industrial-design niche is more focused than the general space. |
+
+**Product (25%)** — raw 3.50 / 5, normalized 62.50, filled 4/4 `████████████░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 4 | From Vizcom being industrial-design-specific with 3D-model integration, sketch-to-render, and material/scene editing tailored to designers (vizcom.com features) rather than a generic AI image tool, we can infer a sharp vertical-specialization angle. |
+| technical_moat | 4 | From the company building specialized 3D-aware generative models for industrial design and accumulating proprietary design-workflow data via enterprise customers (vizcom.com customer list, Index Ventures post), we can infer real domain-tuned IP and data network effects. |
+| velocity | 3 | From vizcom.com/blog shipping major product releases on 2026-05-14 (Plugins with Autodesk Fusion), 2026-03-31 (Extract / Try On / Export), and 2026-02-20 (Liven case study) — roughly one product release per 1–2 months — we can infer monthly shipping cadence rather than weekly. |
+| defensibility | 3 | From enterprise integration with internal asset libraries and team-billing structure (vizcom.com pricing) creating workflow stickiness, we can infer moderate switching costs without strong platform lock-in. |
+
+**Traction (30%)** — raw 4.33 / 5, normalized 83.33, filled 3/4 `█████████████████░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 5 | From vizcom.com publicly listing Ford, Honda, Nissan, Polaris, Gulfstream, Dell, Sonos, Stanley Black & Decker, Brooks, Skechers, and Columbia as customers — a Fortune-500-heavy named-logo roster — combined with three back-to-back priced rounds ($5M seed 2023 → $20M Series A 2024 → $27M Series B 2025 per radical.vc/portfolio/vizcom) implying investor-validated ARR growth, we can infer growing ARR with named logos clearly past the 5-anchor. |
+| users_customers | 4 | From the named enterprise customer base spanning automotive, footwear, consumer products, and architecture (vizcom.com), we can infer strong design-partner adoption — though no individual-user count is disclosed. |
+| growth_rate | — | Funding-round cadence and logo-additions are not a growth-rate metric; no public MoM/QoQ revenue, paid-seat, or active-user figure is disclosed for Vizcom. |
+| engagement_retention | 4 | From the customer roster expanding from initial automotive (Ford, Honda, Nissan) to a Fortune-500-heavy base including Sonos, Stanley Black & Decker, Brooks, Skechers, Columbia (vizcom.com customer list) over multiple years as a strong qualitative-retention proxy at enterprise-design tier, we can infer strong qualitative retention — no NRR disclosed. |
+
+**Notes:** Founded ~2022. Founders: Jordan Taylor (CEO, ex-Honda/NVIDIA industrial designer), Kaelan Richards (CTO). ~$52M total: $5M seed Unusual Ventures (2023-01), $20M Series A Index Ventures (2024), $27M Series B Radical Ventures (2025).
+
+### 2. Reve — 62.25/100
+
+- **Website:** <https://app.reve.com/>
+- **Stage:** Series B
+- **One-liner:** Foundation-model AI image generator (Reve Image 1.0) emphasizing prompt adherence and readable typography, offered via web app and API to creators and film professionals.
+- **Data completeness:** 88%
+
+**Team (20%)** — raw 4.20 / 5, normalized 80.00, filled 5/5 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From co-founders including Taesung Park (Berkeley/Adobe Research, pix2pix and CycleGAN co-author per his publication record) and Michael Gharbi (MIT PhD, Google Research generative imaging), we can infer founders who literally pioneered the underlying research field they are now commercializing. |
+| technical_depth | 5 | From the founding team combining PhD-level generative-imaging researchers (Taesung Park, Michael Gharbi), an ex-Adobe Senior Director of Product (Christian Cantrell as CPO), and Reve Image 1.0 ranking #1 on Artificial Analysis ahead of Midjourney v6.1 / Imagen 3 / Recraft V3 (VentureBeat 2024), we can infer world-class technical depth. |
+| prior_founding_experience | 3 | From co-founder Jon Watte's prior VP Technology role at IMVU (acquired, deal size undisclosed at $100M+ per Crunchbase organization/reve-ai) and Mike Speiser's role as a long-running Sutter Hill incubator partner (an investor/incubator track record, not a founder-CEO with a personal $100M+ exit), we can infer credible prior operator experience without a confirmed prior founder-led $100M+ exit — anchor 3 ('prior startup, no exit') rather than the strict anchor 5. |
+| team_completeness | 4 | From Tracxn reporting 48 total employees and the founding team explicitly covering research (Park/Gharbi), product (Cantrell as CPO), and technology (Watte) functions per crunchbase.com/organization/reve-ai, we can infer strong functional coverage. |
+| network_credibility | 4 | From PitchBook (profiles/company/769520-71) listing Basis Set Ventures and Top Harvest Capital as investors — both real tier-1-adjacent firms — but the headline $390M total-raised figure being unconfirmed in independent press, SEC filings, or TechCrunch / Bloomberg coverage as of 2026-05-14, we can infer credible tier-1-adjacent backing at anchor 4 rather than the strict anchor-5 'top-tier accelerator + tier-1 VC + named advisors' tier where the funding-scale claim is corroborated. |
+
+**Market (25%)** — raw 3.75 / 5, normalized 68.75, filled 4/4 `██████████████░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From MarketsandMarkets sizing the AI Image Generator market at USD 8.7B in 2024 → USD 60.8B by 2030 at 38.2% CAGR (marketsandmarkets.com/Market-Reports/ai-image-video-generator-market-235119833.html), we can infer a TAM in the multi-tens-of-billions on a 5-year horizon — past anchor 3 (~$10B) but short of the >$100B anchor-5 single-segment threshold (the 'creative software + media production' stacked framing isn't a single named-analyst TAM). |
+| growth_rate | 5 | From MarketsandMarkets' 38.2% CAGR for the AI Image Generator market 2024-2030 (marketsandmarkets.com/Market-Reports/ai-image-video-generator-market-235119833.html) and Grand View / Precedence projecting the broader generative-AI market at 40-43% CAGR through 2032-35 (grandviewresearch.com/industry-analysis/generative-ai-market-report, precedenceresearch.com/generative-ai-market), we can infer the gen-AI image subsegment Reve occupies is at or above the >40% anchor-5 threshold. |
+| timing | 5 | From Reve Image 1.0 launching as the #1-ranked model in 2024 (VentureBeat, Artificial Analysis benchmark) when enterprise and creator adoption of image AI is at peak inflection, we can infer a clear-now moment. |
+| competitive_intensity_inv | 1 | From the image-generation space being saturated with Midjourney, Stability AI, OpenAI DALL-E / GPT image, Google Imagen, Adobe Firefly, Ideogram, Recraft, Flux, Krea, and others (per VentureBeat 2024 model comparison), we can infer maximum competitive intensity. |
+
+**Product (25%)** — raw 3.25 / 5, normalized 56.25, filled 4/4 `███████████░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 3 | From Reve Image 1.0 having led Artificial Analysis's image-quality leaderboard at March 2025 launch (VentureBeat 2024 coverage) but as of 2026-05-14 the same leaderboard now ranking GPT Image 2 (high) at the top with Elo 1337 ahead of Nano Banana Pro / GPT Image 1.5 / HunyuanImage 3.0 (artificialanalysis.ai/image/leaderboard/text-to-image), the original quality-led differentiation has eroded — defensible at 'different feature mix' anchor 3 (typography handling remains a distinguishing strength) rather than the 'category-defining angle' anchor 5. |
+| technical_moat | 5 | From the proprietary model being built by category-pioneering researchers (Taesung Park, Michael Gharbi) and ranking #1 on independent benchmark (VentureBeat 2024), we can infer hard-tech IP defensibility consistent with the 5-anchor. |
+| velocity | 2 | From Reve having shipped only one major model (Reve Image 1.0 / Halfmoon, March 2025 per VentureBeat) plus a 2026 single-panel UI update — visible product cadence around quarterly major motions rather than monthly or weekly — we can infer slow-but-real shipping between stagnant and monthly. |
+| defensibility | 3 | From the API surface being interchangeable with competing image-gen providers (app.reve.com surface plus the broader image-AI API market), tempered by user-asset accumulation in the web app, we can infer moderate switching costs. |
+
+**Traction (30%)** — raw 3.00 / 5, normalized 50.00, filled 2/4 `██████████░░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 3 | From app.reve.com offering a pricing page and developer API console plus free preview access, but no disclosed ARR or named enterprise customers in public sources, we can infer monetization underway at early-stage but without strong revenue-signal evidence. |
+| users_customers | 3 | From the free preview and creator-program references (app.reve.com) plus VentureBeat 2024 coverage driving consumer awareness, we can infer a meaningful user base without disclosed counts — evidence supports a middle-of-the-scale value rather than the 1k-active 5-anchor. |
+| growth_rate | — | No public MoM growth figure; the only timed milestones are the March 2025 model launch and a 2026 UI refresh, neither of which translates to a defensible user/revenue rate. |
+| engagement_retention | — | Consumer image-gen product with free + $19.99/mo tiers (app.reve.com); no NRR, churn, return-visit, or DAU/MAU figure publicly disclosed. |
+
+**Notes:** Reve AI, Inc., founded 2023, Palo Alto, 48 employees. Co-founders include Michael Gharbi (MIT/Google), Taesung Park (CycleGAN/pix2pix co-author), Mike Speiser (Sutter Hill incubator), Jon Watte (ex-IMVU VP Tech), Christian Cantrell (ex-Adobe Sr Director, CPO). PitchBook lists $390M total raised — UNCONFIRMED in independent press, SEC filings, or TC/Bloomberg coverage as of 2026-05-14; treat as PitchBook-reported only. Reve Image 1.0 was #1 on Artificial Analysis at March 2025 launch (VentureBeat 2024) but has been displaced — as of 2026-05-14 GPT Image 2 (high) leads the same leaderboard at Elo 1337 (artificialanalysis.ai/image/leaderboard/text-to-image). Stage set to series_b on the conservative side of the PitchBook-reported total; sub-scores were calibrated against seed anchors and may need recalibration on the next research pass.
+
+### 1. Rasa — 63.98/100
+
+- **Website:** <https://rasa.community/>
+- **Stage:** Series C
+- **One-liner:** Open-source framework + commercial platform for building text- and voice-based conversational AI applications, with multilingual NLP and dialogue-management primitives.
+- **Data completeness:** 94%
+
+**Team (15%)** — raw 4.20 / 5, normalized 80.00, filled 5/5 `████████████████░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| founder_market_fit | 5 | From Alan Nichol and Alexander Weidauer co-founding Rasa in 2016 (per rasa.com/about and TechCrunch 2024-02-14) and continuously building OSS conversational AI for nearly a decade, we can infer they have lived the problem deeply for years. |
+| technical_depth | 5 | From rasa.community citing 50M+ downloads and 750+ contributors on a 9-year-old conversational-AI OSS framework, we can infer OSS-leadership depth that clears the 5-anchor. |
+| prior_founding_experience | 1 | From public sources (Alan Nichol's LinkedIn linkedin.com/in/anichol, rasa.com/about) showing Rasa is the first venture for both co-founders with no prior exit, we can infer the strict 'first-timers' anchor applies — though both are deeply seasoned within Rasa itself. |
+| team_completeness | 5 | From Tracxn reporting 180 employees as of 2026-02-28 with separate CEO and CTO roles plus an executive team across the 9-year company, we can infer full functional coverage (tech + commercial + design). |
+| network_credibility | 5 | From Rasa having raised $83.8M across 9 rounds including a Series B led by Andreessen Horowitz (TechCrunch 2020-06-23) and a $30M Series C in 2024 (TechCrunch 2024-02-14), we can infer top-tier VC backing. |
+
+**Market (20%)** — raw 3.25 / 5, normalized 56.25, filled 4/4 `███████████░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| tam_size | 4 | From Gartner's 2023-07-31 release projecting worldwide contact-center end-user spend at USD 18.6B in 2023 with conversational-AI / virtual-assistant the fastest-growing segment driving 16-24% category growth (gartner.com/en/newsroom/press-releases/2023-07-31), and Fortune Business Insights sizing the broader CCaaS market on a multi-decade growth path (fortunebusinessinsights.com/contact-center-as-a-service-ccaas-market-104160), we can infer a multi-tens-of-billions conversational-AI / CCaaS TAM at anchor 4 — past ~$10B but short of the >$100B anchor 5. |
+| growth_rate | 4 | From Gartner's 2023-07-31 release projecting CCaaS at a 29% revenue CAGR reaching USD 17.9B by 2024 with conversational AI specifically growing 24% in 2024 (gartner.com/en/newsroom/press-releases/2023-07-31), we can infer the segment is growing in the 24-29% range — well above the ~15% anchor-3 bar but below the >40% anchor-5 threshold. |
+| timing | 4 | From voice and multimodal AI agents reaching production-grade in 2025–2026 (Rasa's multimodal voice push referenced in rasa.com/events 2025–26 coverage), we can infer a favorable second wave for an established player in the space. |
+| competitive_intensity_inv | 1 | From the conversational-AI space being saturated with OpenAI's Assistants API, Voiceflow, Botpress, Dialogflow, Microsoft Bot Framework, Amazon Lex, plus dozens of voice-AI startups (per TechCrunch 2024-02-14 coverage), we can infer maximum competitive intensity. |
+
+**Product (25%)** — raw 3.25 / 5, normalized 56.25, filled 4/4 `███████████░░░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| differentiation | 3 | From rasa.community emphasizing on-prem deployability, full ML-pipeline control, and ~100-language NLP coverage versus closed-source competitors, we can infer real-but-modest differentiation rather than a category-defining angle. |
+| technical_moat | 4 | From a decade of accumulated conversational-AI NLP pipelines, 750+ contributors, and 50M+ downloads creating a substantial open-source codebase moat (rasa.community), we can infer strong technical defensibility even with OSS licensing. |
+| velocity | 3 | From rasa.com/blog showing daily posts through April–May 2026 (10 posts between 2026-04-30 and 2026-05-14) but the github.com/RasaHQ/rasa OSS repo shipping only one release (3.6.21) in the prior 16 months, we can infer monthly product motion via enterprise + content channels rather than the weekly OSS-release cadence of younger competitors. |
+| defensibility | 3 | From OSS adoption making code-level switching technically possible but customer dialogue flows, custom training data, and enterprise integrations creating practical lock-in, we can infer moderate switching costs. |
+
+**Traction (40%)** — raw 3.67 / 5, normalized 66.67, filled 3/4 `█████████████░░░░░░░`
+
+| Sub-score | Value | Reasoning |
+|:---|:---:|:---|
+| revenue_signal | 4 | From rasa.community marketing Rasa Pro and 'Rasa-as-a-Service' enterprise tiers, 180 employees as of 2026-02-28 (per Tracxn), and a $30M Series C closed 2024-02-14 (TechCrunch), we can infer growing enterprise ARR with named customer base, though specific ARR is undisclosed. |
+| users_customers | 4 | From rasa.community citing 50M+ downloads and 15,000+ forum members, plus historical enterprise customers including Adobe and T-Mobile per past TechCrunch coverage, we can infer a large but somewhat aged developer footprint and credible enterprise logos. |
+| growth_rate | — | No public MoM revenue, paid-seat, or headcount-trajectory figure is disclosed; OSS-release cadence (one release in prior 16 months per github.com/RasaHQ/rasa) is a product-velocity proxy, not a user/revenue growth metric, so it cannot anchor a defensible growth-rate score. |
+| engagement_retention | 3 | From 50M+ downloads accumulated over 9 years and 15,000+ forum members (rasa.community) sustaining alongside enterprise customers like Adobe/T-Mobile (TechCrunch 2024-02-14) as a soft qualitative-retention proxy, we can infer 'okay' retention — no NRR or churn figure publicly disclosed. |
+
+**Notes:** Rasa Technologies Inc., founded 2016. $83.8M total raised across 9 rounds; latest Series C $30M 2024-02-14 led with multiple investors. 180 employees. Co-founders Alan Nichol (CTO) and Alexander Weidauer (CEO). Sub-scores were originally calibrated against seed anchors; under series_c anchors some (traction.users_customers, team_completeness, network_credibility) may need a downward recalibration on the next research pass.

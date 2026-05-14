@@ -68,7 +68,7 @@ class Startup(_Strict):
     name: str = Field(min_length=1)
     website: HttpUrl
     one_liner: str = ""
-    stage: Literal["pre_seed", "seed"]
+    stage: Literal["pre_seed", "seed", "series_a", "series_b", "series_c"]
     team: Team
     market: Market
     product: Product
@@ -86,4 +86,14 @@ PILLAR_MODELS: dict[str, type[_Strict]] = {
     "market": Market,
     "product": Product,
     "traction": Traction,
+}
+
+STAGES: tuple[str, ...] = ("pre_seed", "seed", "series_a", "series_b", "series_c")
+
+STAGE_LABEL: dict[str, str] = {
+    "pre_seed": "Pre-Seed",
+    "seed": "Seed",
+    "series_a": "Series A",
+    "series_b": "Series B",
+    "series_c": "Series C",
 }

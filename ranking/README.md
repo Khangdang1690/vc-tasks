@@ -1,23 +1,28 @@
 # ranking
 
-Deterministic ranking pipeline for pre-seed / seed tech startups.
+Deterministic ranking pipeline for tech startups across pre-seed → Series C.
 
 Claude Code (separately) researches each startup and fills in a structured JSON file
 against the data contract in [ranking/contract.py](ranking/contract.py). The pipeline
 validates the JSON, scores each startup on **Team / Market / Product / Traction**, ranks
-them, and writes a Markdown report. Given the same input it always produces a
-byte-identical output — no randomness, no clocks, no network.
+them within stage cohorts, and writes a Markdown report. Given the same input it always
+produces a byte-identical output — no randomness, no clocks, no network.
 
-## Weights
+## Weights (per stage)
 
-| Pillar | Weight |
-|---|---|
-| Team | 40% |
-| Market | 25% |
-| Product | 20% |
-| Traction | 15% |
+Earlier stages weight founder/team signal heavier; later stages weight execution/traction heavier.
 
-Edit [ranking/weights.py](ranking/weights.py) to change the thesis.
+| Stage | Team | Market | Product | Traction |
+|---|---:|---:|---:|---:|
+| pre_seed | 45% | 25% | 20% | 10% |
+| seed     | 40% | 25% | 20% | 15% |
+| series_a | 30% | 25% | 20% | 25% |
+| series_b | 20% | 25% | 25% | 30% |
+| series_c | 15% | 20% | 25% | 40% |
+
+Cross-stage totals are not directly comparable — the report stratifies leaderboards by
+stage. Traction anchors are also stage-specific (see [CONTRACT.md](CONTRACT.md)). Edit
+[ranking/weights.py](ranking/weights.py) to change the thesis.
 
 ## Setup
 

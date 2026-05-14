@@ -5,9 +5,9 @@ Pure: same input → byte-identical Markdown. No timestamps, no env reads.
 
 from __future__ import annotations
 
-from ranking.contract import Startup
+from ranking.contract import STAGE_LABEL, STAGES, Startup
 from ranking.scoring import PillarResult, ScoredStartup
-from ranking.weights import PILLARS, WEIGHTS
+from ranking.weights import PILLARS, WEIGHTS_BY_STAGE
 
 _BAR_WIDTH = 20
 
@@ -20,6 +20,11 @@ def _bar(pct: float) -> str:
 
 def _fmt(v: float | None) -> str:
     return "—" if v is None else f"{v:.2f}"
+
+
+def _weights_line(stage: str) -> str:
+    row = WEIGHTS_BY_STAGE[stage]
+    return " / ".join(f"{p.title()} {row[p] * 100:.0f}%" for p in PILLARS)
 
 
 def _leaderboard(scored: list[ScoredStartup]) -> str:
@@ -43,8 +48,8 @@ def _leaderboard(scored: list[ScoredStartup]) -> str:
     return "\n".join(lines)
 
 
-def _pillar_header(p: PillarResult) -> str:
-    weight_pct = WEIGHTS[p.name] * 100
+def _pillar_header(p: PillarResult, weights: dict[str, float]) -> str:
+    weight_pct = weights[p.name] * 100
     if p.missing:
         return (
             f"**{p.name.title()} ({weight_pct:.0f}%)** — _no data_ — "
@@ -80,12 +85,12 @@ def _startup_section(rank_pos: int, s: ScoredStartup) -> str:
     parts.append(f"### {rank_pos}. {st.name} — {s.total:.2f}/100")
     parts.append("")
     parts.append(f"- **Website:** <{st.website}>")
-    parts.append(f"- **Stage:** {st.stage}")
+    parts.append(f"- **Stage:** {STAGE_LABEL[st.stage]}")
     parts.append(f"- **One-liner:** {st.one_liner}")
     parts.append(f"- **Data completeness:** {s.data_completeness:.0%}")
     parts.append("")
     for name in PILLARS:
-        parts.append(_pillar_header(s.pillars[name]))
+        parts.append(_pillar_header(s.pillars[name], s.pillar_weights))
         parts.append("")
         parts.append(_sub_score_table(st, name))
         parts.append("")
@@ -102,20 +107,39 @@ def _startup_section(rank_pos: int, s: ScoredStartup) -> str:
 
 
 def render(scored: list[ScoredStartup]) -> str:
-    weight_line = " / ".join(
-        f"{p.title()} {WEIGHTS[p] * 100:.0f}%" for p in PILLARS
-    )
     sections: list[str] = []
     sections.append("# Startup Ranking Report")
     sections.append("")
-    sections.append(f"_Weights: {weight_line}. Scores in [0, 100]. Deterministic output._")
+    sections.append(
+        "_Scores in [0, 100]. Pillar weights vary by stage; see CONTRACT.md. "
+        "Leaderboards are stratified by stage — cross-stage totals are not directly comparable. "
+        "Deterministic output._"
+    )
     sections.append("")
-    sections.append("## Leaderboard")
+    sections.append("## Leaderboards")
     sections.append("")
-    sections.append(_leaderboard(scored))
-    sections.append("")
+
+    by_stage: dict[str, list[ScoredStartup]] = {stage: [] for stage in STAGES}
+    for s in scored:
+        by_stage[s.startup.stage].append(s)
+
+    for stage in STAGES:
+        cohort = by_stage[stage]
+        if not cohort:
+            continue
+        sections.append(f"### {STAGE_LABEL[stage]} ({len(cohort)})")
+        sections.append("")
+        sections.append(f"_Weights: {_weights_line(stage)}._")
+        sections.append("")
+        sections.append(_leaderboard(cohort))
+        sections.append("")
+
     sections.append("## Per-Startup Breakdown")
     sections.append("")
-    for i, s in enumerate(scored, start=1):
-        sections.append(_startup_section(i, s))
+    for stage in STAGES:
+        cohort = by_stage[stage]
+        if not cohort:
+            continue
+        for i, s in enumerate(cohort, start=1):
+            sections.append(_startup_section(i, s))
     return "\n".join(sections).rstrip() + "\n"

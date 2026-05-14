@@ -8,9 +8,9 @@ from pathlib import Path
 import pytest
 
 from ranking.cli import run as cli_run
-from ranking.contract import StartupBatch
+from ranking.contract import STAGES, StartupBatch
 from ranking.scoring import rank, score_pillar, score_startup
-from ranking.weights import WEIGHTS
+from ranking.weights import WEIGHTS, WEIGHTS_BY_STAGE, weights_for
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample.json"
 
@@ -89,10 +89,9 @@ def test_total_uses_weights():
     batch = _load_batch()
     charlie = next(s for s in batch.startups if s.name == "Charlie Co")
     scored = score_startup(charlie)
-    # team=0, market=50, product=50, traction=50
-    expected = 0 * WEIGHTS["team"] + 50 * (
-        WEIGHTS["market"] + WEIGHTS["product"] + WEIGHTS["traction"]
-    )
+    # team=0, market=50, product=50, traction=50; use stage-specific weights.
+    w = weights_for(charlie.stage)
+    expected = 0 * w["team"] + 50 * (w["market"] + w["product"] + w["traction"])
     assert scored.total == pytest.approx(round(expected, 2))
 
 
@@ -149,6 +148,39 @@ def test_higher_team_wins_when_other_pillars_equal():
 
 def test_weights_sum_to_one():
     assert sum(WEIGHTS.values()) == pytest.approx(1.0)
+
+
+@pytest.mark.parametrize("stage", STAGES)
+def test_per_stage_weights_sum_to_one(stage: str):
+    assert sum(WEIGHTS_BY_STAGE[stage].values()) == pytest.approx(1.0)
+
+
+def test_pillar_weights_exposed_on_result():
+    batch = _load_batch()
+    alpha = next(s for s in batch.startups if s.name == "Alpha Labs")
+    scored = score_startup(alpha)
+    assert scored.pillar_weights == weights_for(alpha.stage)
+
+
+def test_weights_vary_by_stage():
+    # Same sub-scores, but team-heavy: 5s on team, 1s elsewhere.
+    # pre_seed weights team at 0.45; series_c weights team at 0.15.
+    # So pre_seed total should be strictly higher than series_c.
+    raw_pre = _uniform_startup("Team Heavy PS", "https://ps.example.com", 1)
+    raw_pre["stage"] = "pre_seed"
+    for f in raw_pre["team"]:
+        raw_pre["team"][f] = _score(5)
+
+    raw_c = json.loads(json.dumps(raw_pre))
+    raw_c["name"] = "Team Heavy SC"
+    raw_c["website"] = "https://sc.example.com"
+    raw_c["stage"] = "series_c"
+
+    batch = StartupBatch.model_validate(
+        {"schema_version": "1.0", "startups": [raw_pre, raw_c]}
+    )
+    pre, sc = batch.startups
+    assert score_startup(pre).total > score_startup(sc).total
 
 
 # ---------- end-to-end determinism ----------

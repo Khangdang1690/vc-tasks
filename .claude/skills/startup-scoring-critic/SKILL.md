@@ -41,7 +41,7 @@ Input file: `ranking/inputs/startups.json`. Schema (Pydantic v2, `extra="forbid"
   "name": "...",
   "website": "https://...",
   "one_liner": "...",
-  "stage": "pre_seed" | "seed",
+  "stage": "pre_seed" | "seed" | "series_a" | "series_b" | "series_c",
   "team":     { 5 sub-scores },
   "market":   { 4 sub-scores },
   "product":  { 4 sub-scores },
@@ -52,12 +52,14 @@ Input file: `ranking/inputs/startups.json`. Schema (Pydantic v2, `extra="forbid"
 
 ### The 17 sub-scores
 
-| Pillar (weight) | Sub-criteria |
-|---|---|
-| **Team (40%)** | `founder_market_fit`, `technical_depth`, `prior_founding_experience`, `team_completeness`, `network_credibility` |
-| **Market (25%)** | `tam_size`, `growth_rate`, `timing`, `competitive_intensity_inv` |
-| **Product (20%)** | `differentiation`, `technical_moat`, `velocity`, `defensibility` |
-| **Traction (15%)** | `revenue_signal`, `users_customers`, `growth_rate`, `engagement_retention` |
+Pillar weights vary by stage — see CONTRACT.md for the full table. Indicative range:
+
+| Pillar | Sub-criteria | Weight (pre_seed → series_c) |
+|---|---|---|
+| **Team** | `founder_market_fit`, `technical_depth`, `prior_founding_experience`, `team_completeness`, `network_credibility` | 45% → 15% |
+| **Market** | `tam_size`, `growth_rate`, `timing`, `competitive_intensity_inv` | 25% → 20% |
+| **Product** | `differentiation`, `technical_moat`, `velocity`, `defensibility` | 20% → 25% |
+| **Traction** | `revenue_signal`, `users_customers`, `growth_rate`, `engagement_retention` | 10% → 40% |
 
 ### Anchors (1 → 5) — the rubric you enforce
 
@@ -158,10 +160,17 @@ Compare the score to the anchor for that number.
 - `competitive_intensity_inv` is the **only** inverted field. A crowded category should score **low** (1–2), not high. If a startup is in a crowded space and the score is high (4–5), 🔴 — likely a sign-error.
 
 ### G. Stage mismatch
+Anchors are stage-relative (see CONTRACT.md Traction anchors). The schema-stated `stage` value drives the rubric — challenge sub-scores that obviously belong to a different stage's anchor band.
+
 For `stage: "pre_seed"` startups:
 - `revenue_signal: 4–5` is rare. Possible (some pre-seeds have early revenue) but demands strong named-logo evidence in the reasoning.
 - `users_customers: 5` needs design-partner names or active-user counts in the reasoning text.
 - `prior_founding_experience: 5` without exit evidence is suspect — founders often inflate bios. Demand a Crunchbase/announcement link.
+
+For `stage: "series_a"` / `"series_b"` / `"series_c"` startups:
+- The traction anchors raise the bar: a Series A `revenue_signal: 5` means $1–5M ARR with NRR >100%, not "growing ARR with named logos." Series C `users_customers: 5` means 1M+ users or 500+ enterprise logos. If the cited evidence describes seed-tier traction, downgrade.
+- Verify the stage value itself matches the most recent funding round. Mislabeling a Series B as `seed` will systematically inflate scores; flag a stage correction in the must-fix list and rerun the pipeline.
+- `prior_founding_experience` is less load-bearing at later stages (lower weight) but the anchor doesn't shift — still demands exit evidence.
 
 ### H. Internal consistency
 - If `technical_moat: 5` (hard tech) but `velocity: 5` (weekly shipping), check both reasonings line up — hard tech rarely ships weekly visible product changes. Either one is over-scored, or the reasoning explains the duality.

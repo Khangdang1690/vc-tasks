@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from ranking.contract import Score, StartupBatch
+from ranking.contract import STAGES, Score, StartupBatch
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample.json"
 
@@ -95,9 +95,16 @@ def test_missing_pillar_field_rejected():
 
 def test_unknown_stage_rejected():
     raw = _load()
-    raw["startups"][0]["stage"] = "series_a"
+    raw["startups"][0]["stage"] = "ipo"
     with pytest.raises(ValidationError):
         StartupBatch.model_validate(raw)
+
+
+@pytest.mark.parametrize("stage", STAGES)
+def test_all_known_stages_validate(stage: str):
+    raw = _load()
+    raw["startups"][0]["stage"] = stage
+    StartupBatch.model_validate(raw)
 
 
 def test_bad_schema_version_rejected():
