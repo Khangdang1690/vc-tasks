@@ -1,0 +1,121 @@
+diff --git a/baml_src/clients.baml b/baml_src/clients.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/clients.baml
+@@ -0,0 +1,23 @@
++client<llm> DefaultOpenAI {
++  provider openai
++  options {
++    model "gpt-4o-mini"
++    api_key env.OPENAI_API_KEY
++  }
++}
++
++client<llm> DefaultAnthropic {
++  provider anthropic
++  options {
++    model "claude-3-5-sonnet-20241022"
++    api_key env.ANTHROPIC_API_KEY
++  }
++}
++
++client<llm> DefaultGemini {
++  provider google-ai
++  options {
++    model "gemini-2.5-flash"
++    api_key env.GEMINI_API_KEY
++  }
++}
+diff --git a/baml_src/extractkeywords.baml b/baml_src/extractkeywords.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/extractkeywords.baml
+@@ -0,0 +1,18 @@
++function ExtractKeywords(query: string) -> string[] {
++  client "openai/gpt-4"
++  prompt #"
++    You are a world class search engine. You are about to be given a question by a user. Make sure to generate as many possible keywords that are relevant to the question at hand which can help to identify relevant chunks of information to the user's query.
++    Make sure to extract all possible keywords within the question itself first before generating new ones. Also expand all accronyms, identify synonyms and related topics.
++
++    The question is {{ query }}.
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test example_query {
++  functions [ExtractKeywords]
++  args {
++    query "What is the capital of France?"
++  }
++}
+diff --git a/baml_src/generatequerykeywordsforsearch.baml b/baml_src/generatequerykeywordsforsearch.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/generatequerykeywordsforsearch.baml
+@@ -0,0 +1,19 @@
++class FullTextSearchEvaluationItem {
++  question string
++  keywords string[]
++  chunk_id string?
++}
++
++function GenerateQueryKeywordsForSearch(item: FullTextSearchEvaluationItem) -> FullTextSearchEvaluationItem {
++  client "openai/gpt-4o-mini"
++  prompt #"
++    Given the following question and an optional chunk ID, generate a list of keywords.
++    If existing keywords are provided, you can refine or expand upon them.
++
++    Question: {{ item.question }}
++    Chunk ID: {{ item.chunk_id }}
++    Existing Keywords: {{ item.keywords }}
++
++    {{ ctx.output_format }}
++  "#
++}
+diff --git a/baml_src/generatequestionanswerpair.baml b/baml_src/generatequestionanswerpair.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/generatequestionanswerpair.baml
+@@ -0,0 +1,30 @@
++class QuestionAnswerPair {
++  question string
++  answer string
++  chain_of_thought string
++}
++
++function GenerateQuestionAnswerPair(chunk: string) -> QuestionAnswerPair {
++  client "openai/gpt-3.5-turbo"
++  prompt #"
++    You are a world class algorithm that excels at generating great questions that can be only answered by a specific text that will soon be passed to you.
++
++    Generate a question and answer pair that uses information and content that is specific to the following text chunk, including a chain of thought:
++
++    Text Chunk:
++    {{ chunk }}
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test sample_qa_pair {
++  functions [GenerateQuestionAnswerPair]
++  args {
++    chunk #"
++      The quick brown fox jumps over the lazy dog. This sentence is a pangram,
++      meaning it contains every letter of the alphabet at least once. Pangrams
++      are often used for testing typefaces and keyboard layouts.
++    "#
++  }
++}
+diff --git a/baml_src/generators.baml b/baml_src/generators.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/generators.baml
+@@ -0,0 +1,6 @@
++generator target {
++    output_type "python/pydantic"
++    output_dir "../"
++    version "0.222.0"
++    default_client_mode sync
++}

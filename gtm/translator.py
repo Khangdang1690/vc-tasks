@@ -1,0 +1,519 @@
+"""LLM-driven translation from a Python LLM call site to BAML.
+
+The translator takes a scanner.CallSite and produces a generated .baml file
+that captures the same intent in BAML's DSL. The Gemini call is grounded
+with a few-shot bundle (see seed_baml_examples) and the validator loops it
+back with the compiler error on failure.
+
+Constraints (per project brief):
+  * Gemini 2.5 Flash free tier only. Multi-key rotation on 429s. No fallback
+    to any paid API ever — exit cleanly when the last key is exhausted.
+  * Track tokens per call; warn at 80% of a conservative daily quota.
+"""
+
+from __future__ import annotations
+
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+import time
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Iterable
+
+from google import genai
+from google.genai import errors as genai_errors
+from google.genai import types as genai_types
+
+from scanner import CallSite
+
+
+# Gemini 2.5 Flash free tier sustained budget. The published number changes
+# but we treat ~1M tokens/day as the conservative ceiling and warn at 80%.
+DAILY_TOKEN_SOFT_LIMIT = 1_000_000
+WARN_AT = int(DAILY_TOKEN_SOFT_LIMIT * 0.8)
+MODEL = "gemini-2.5-flash"
+
+
+# ---------------------------------------------------------------------------
+# Few-shot example seeding
+# ---------------------------------------------------------------------------
+
+
+def seed_baml_examples(cache_path: Path, force: bool = False) -> str:
+    """Return the few-shot example string. Writes the cache file on first run.
+
+    Strategy: shell out to `baml-cli init` in a temp dir and inline the three
+    canonical files (resume.baml / clients.baml / generators.baml). This is
+    deterministic, version-locked to the installed CLI, and works offline —
+    much more reliable than fetching docs.boundaryml.com.
+    """
+    if cache_path.exists() and not force:
+        return cache_path.read_text(encoding="utf-8")
+
+    with tempfile.TemporaryDirectory(prefix="baml_seed_") as tmp:
+        result = subprocess.run(
+            ["baml-cli", "init"],
+            cwd=tmp,
+            capture_output=True,
+            text=True,
+            shell=True,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"baml-cli init failed (rc={result.returncode}): {result.stderr.strip()}\n"
+                f"Make sure `npm install -g @boundaryml/baml` succeeded."
+            )
+        seed_dir = Path(tmp) / "baml_src"
+        resume_baml = (seed_dir / "resume.baml").read_text(encoding="utf-8")
+        clients_baml = (seed_dir / "clients.baml").read_text(encoding="utf-8")
+        generators_baml = (seed_dir / "generators.baml").read_text(encoding="utf-8")
+
+    bundle = _build_example_bundle(resume_baml, clients_baml, generators_baml)
+    cache_path.write_text(bundle, encoding="utf-8")
+    return bundle
+
+
+def _build_example_bundle(resume_baml: str, clients_baml: str, generators_baml: str) -> str:
+    return f"""# BAML Few-Shot Bundle
+
+This file is the grounding context handed to the translator LLM. It is
+seeded automatically on first run from `baml-cli init` so the syntax is
+locked to the installed CLI version.
+
+## Key syntactic rules
+
+* `class Foo {{ field type }}` — define a data shape. Types are bare names:
+  `string`, `int`, `float`, `bool`, `string[]`, `Foo?` (optional), `Foo | Bar`
+  (union), enums via `enum Color {{ RED GREEN BLUE }}`.
+* `function FuncName(arg: Type) -> ReturnType` — defines a typed LLM call.
+* Inside `function`: `client "<provider>/<model>"` or a reference to a
+  named client from clients.baml. The `prompt #" ... "#` block contains
+  the actual prompt with `{{{{ arg }}}}` jinja-style interpolation and
+  `{{{{ ctx.output_format }}}}` which BAML expands to the schema hint.
+* `test name {{ functions [F1, F2] args {{ ... }} }}` — inline test blocks.
+
+## Example 1: canonical extraction (resume parsing)
+
+```baml
+{resume_baml.strip()}
+```
+
+## Example 2: client + retry policy definitions (clients.baml)
+
+```baml
+{clients_baml.strip()}
+```
+
+## Example 3: codegen target config (generators.baml)
+
+```baml
+{generators_baml.strip()}
+```
+
+## Additional patterns the translator should know
+
+### Enum classification
+
+```baml
+enum Sentiment {{
+  POSITIVE
+  NEGATIVE
+  NEUTRAL
+}}
+
+function ClassifySentiment(text: string) -> Sentiment {{
+  client "openai/gpt-4o-mini"
+  prompt #"
+    Classify the sentiment of this text as POSITIVE, NEGATIVE, or NEUTRAL.
+
+    Text: {{{{ text }}}}
+
+    {{{{ ctx.output_format }}}}
+  "#
+}}
+```
+
+### Tool / function calling (Anthropic-style)
+
+```baml
+class WeatherQuery {{
+  location string
+  unit "celsius" | "fahrenheit"
+}}
+
+function ChooseWeatherTool(user_message: string) -> WeatherQuery {{
+  client "anthropic/claude-3-5-sonnet-20241022"
+  prompt #"
+    The user has asked a weather question. Extract the location and the
+    requested temperature unit.
+
+    User: {{{{ user_message }}}}
+
+    {{{{ ctx.output_format }}}}
+  "#
+}}
+```
+
+### Optional fields and nested classes
+
+```baml
+class Address {{
+  street string
+  city string
+  state string?
+  country string
+}}
+
+class Person {{
+  name string
+  email string?
+  age int?
+  addresses Address[]
+}}
+
+function ExtractPerson(text: string) -> Person {{
+  client "openai/gpt-4o-mini"
+  prompt #"
+    Extract the person from the text.
+    {{{{ ctx.output_format }}}}
+
+    Text: {{{{ text }}}}
+  "#
+}}
+```
+"""
+
+
+# ---------------------------------------------------------------------------
+# Gemini client with multi-key rotation + token tracking
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class TokenUsage:
+    """Aggregate token usage across the session."""
+    prompt_tokens: int = 0
+    output_tokens: int = 0
+    total_tokens: int = 0
+    call_count: int = 0
+
+    def add(self, prompt: int, output: int) -> None:
+        self.prompt_tokens += prompt
+        self.output_tokens += output
+        self.total_tokens += prompt + output
+        self.call_count += 1
+
+
+class FreeQuotaExhausted(RuntimeError):
+    """All configured Gemini keys have hit rate / quota limits."""
+
+
+class GeminiClient:
+    """Gemini wrapper that rotates keys on rate limits and exits on exhaustion.
+
+    Never falls back to any paid API. If every key is rate-limited, raises
+    FreeQuotaExhausted which the CLI surfaces as a clean error and exits.
+    """
+
+    def __init__(self, keys: Iterable[str], model: str = MODEL):
+        cleaned = [k.strip() for k in keys if k and k.strip()]
+        if not cleaned:
+            raise ValueError("No Gemini API keys provided. Set GEMINI_API_KEY in .env.")
+        self.keys = cleaned
+        self.model = model
+        self._idx = 0
+        self._exhausted: set[int] = set()
+        self.usage = TokenUsage()
+        self._client = genai.Client(api_key=self.keys[self._idx])
+
+    @property
+    def current_key_label(self) -> str:
+        # never expose the full key, just an index for debug
+        return f"key#{self._idx + 1}/{len(self.keys)}"
+
+    def _rotate(self) -> bool:
+        """Move to the next non-exhausted key. Return True if rotation succeeded."""
+        self._exhausted.add(self._idx)
+        for i in range(len(self.keys)):
+            if i not in self._exhausted:
+                self._idx = i
+                self._client = genai.Client(api_key=self.keys[i])
+                return True
+        return False
+
+    def generate(self, prompt: str, system: str | None = None, max_retries_per_key: int = 1) -> str:
+        """Run a single Gemini generation, rotating keys on rate-limit errors.
+
+        Returns the text response. Tracks usage on self.usage.
+        """
+        config = genai_types.GenerateContentConfig(
+            system_instruction=system,
+            temperature=0.1,
+            # Keep responses tight — we want code, not commentary.
+            max_output_tokens=2048,
+        )
+
+        attempts = 0
+        last_err: Exception | None = None
+        while True:
+            attempts += 1
+            try:
+                resp = self._client.models.generate_content(
+                    model=self.model,
+                    contents=prompt,
+                    config=config,
+                )
+                if resp.usage_metadata:
+                    self.usage.add(
+                        prompt=resp.usage_metadata.prompt_token_count or 0,
+                        output=resp.usage_metadata.candidates_token_count or 0,
+                    )
+                text = (resp.text or "").strip()
+                if not text:
+                    raise RuntimeError(f"Empty response from Gemini ({self.current_key_label})")
+                return text
+
+            except genai_errors.ClientError as e:
+                last_err = e
+                code = getattr(e, "code", None)
+                # 429 / RESOURCE_EXHAUSTED → rotate. Anything else → raise.
+                msg = str(e).lower()
+                if code == 429 or "resource_exhausted" in msg or "rate" in msg or "quota" in msg:
+                    if not self._rotate():
+                        raise FreeQuotaExhausted(
+                            "All Gemini API keys are rate-limited or exhausted. "
+                            "Wait for the daily reset (midnight Pacific) or add another key to GEMINI_API_KEY."
+                        ) from e
+                    # short backoff then retry on the new key
+                    time.sleep(0.5)
+                    continue
+                raise
+
+            except genai_errors.ServerError as e:
+                # transient 5xx — retry once on same key, then rotate
+                last_err = e
+                if attempts <= max_retries_per_key:
+                    time.sleep(1.0)
+                    continue
+                if not self._rotate():
+                    raise FreeQuotaExhausted(
+                        "All Gemini keys returned server errors; bailing rather than retry-loop."
+                    ) from e
+                attempts = 0  # reset counter for the new key
+
+    def quota_warning(self) -> str | None:
+        if self.usage.total_tokens >= WARN_AT:
+            return (
+                f"Session has consumed {self.usage.total_tokens:,} tokens "
+                f"({self.usage.total_tokens / DAILY_TOKEN_SOFT_LIMIT:.0%} of the ~1M/day free-tier ceiling). "
+                f"Consider stopping or adding another GEMINI_API_KEY."
+            )
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Translation
+# ---------------------------------------------------------------------------
+
+
+# A generated BAML file slug. e.g. "extract_person.baml" or "classify_sentiment.baml".
+_SLUG_RE = re.compile(r"[^a-z0-9]+")
+
+
+@dataclass
+class Translation:
+    """Result of translating one CallSite to BAML."""
+    site: CallSite
+    baml_filename: str | None = None
+    baml_source: str | None = None
+    python_usage: str | None = None  # snippet showing how to call the generated client
+    function_name: str | None = None
+    schema_name: str | None = None
+    error: str | None = None  # if translation failed
+    attempts: int = 0
+    validator_errors: list[str] = field(default_factory=list)
+
+    @property
+    def success(self) -> bool:
+        return self.baml_source is not None and self.error is None
+
+
+SYSTEM_PROMPT = """You are a BAML migration assistant. You convert Python LLM call sites
+to BAML (BoundaryML) functions. BAML is a DSL that generates type-safe LLM client
+code. Every BAML function declares a typed return shape, so the language runtime
+guarantees the output conforms to the schema (via Schema-Aligned Parsing).
+
+You output BAML source code only. No commentary, no markdown fences, no explanation.
+If the input is ambiguous, make a defensible choice and proceed — do not refuse.
+
+The generated BAML file must:
+  1. Be syntactically valid (`baml-cli check` will verify).
+  2. Define one `function` and any `class` / `enum` types it references.
+  3. Use a `client` reference appropriate for the model name from the source.
+     Inline form is fine: `client "openai/gpt-4o-mini"` or `client "anthropic/claude-3-5-sonnet-20241022"`.
+     For unknown models, use `client "openai/gpt-4o-mini"`.
+  4. Use `{{ ctx.output_format }}` inside the prompt so the schema hint is
+     auto-injected by the BAML runtime.
+  5. Include a `test` block ONLY if a clear input example is obvious. Skip it otherwise.
+"""
+
+
+PROMPT_TEMPLATE = """## BAML reference
+
+{examples}
+
+## Migration task
+
+The user has a Python codebase using LLM patterns. We've detected a call site
+of type **{pattern_type}** and want to migrate it to a single .baml file.
+
+### Source file: `{file}:{line}`
+
+### Pattern notes
+{notes}
+
+### Inferred schema (Pydantic class, if any)
+
+{schema_block}
+
+### Source snippet (the call itself)
+
+```python
+{snippet}
+```
+
+### Surrounding context (a few lines before/after for intent)
+
+```python
+{context}
+```
+
+## Output requirements
+
+Produce a single BAML file. Use one function. Pick a clear function name in
+PascalCase (e.g. ExtractResume, ClassifySentiment, ChooseTool). Include any
+class/enum definitions the function refers to. Do not include `clients.baml`
+or `generators.baml` content — only the function-level file.
+
+If the source uses a known model, route the BAML `client` to the equivalent
+provider/model. Defaults: openai/gpt-4o-mini for unknown OpenAI; anthropic/claude-3-5-sonnet-20241022 for anthropic.
+
+Output only the .baml source. No markdown fences.
+{retry_block}"""
+
+
+_FUNC_RE = re.compile(r"function\s+([A-Z][A-Za-z0-9_]+)\s*\(", re.MULTILINE)
+_CLASS_RE = re.compile(r"^\s*class\s+([A-Z][A-Za-z0-9_]+)\s*\{", re.MULTILINE)
+_ENUM_RE = re.compile(r"^\s*enum\s+([A-Z][A-Za-z0-9_]+)\s*\{", re.MULTILINE)
+
+
+def declared_names(baml: str) -> list[str]:
+    """Return all class / enum / function names declared in a baml file."""
+    names: list[str] = []
+    names.extend(_FUNC_RE.findall(baml))
+    names.extend(_CLASS_RE.findall(baml))
+    names.extend(_ENUM_RE.findall(baml))
+    return names
+
+
+def _slugify(name: str) -> str:
+    s = _SLUG_RE.sub("_", name.lower()).strip("_")
+    return s or "migrated"
+
+
+def _strip_markdown_fences(text: str) -> str:
+    """Sometimes the model wraps output in ```baml fences — strip them."""
+    text = text.strip()
+    if text.startswith("```"):
+        # drop first fence line
+        first_nl = text.find("\n")
+        if first_nl != -1:
+            text = text[first_nl + 1 :]
+        # drop trailing fence
+        if text.endswith("```"):
+            text = text[: -3]
+    return text.strip()
+
+
+def _detect_function_name(baml: str) -> str | None:
+    m = _FUNC_RE.search(baml)
+    return m.group(1) if m else None
+
+
+def translate_site(
+    client: GeminiClient,
+    site: CallSite,
+    examples: str,
+    previous_error: str | None = None,
+    previous_attempt: str | None = None,
+    taken_names: list[str] | None = None,
+) -> tuple[str, str | None]:
+    """Run one Gemini call to generate a BAML file for this site.
+
+    Returns (baml_source, detected_function_name). Caller is responsible for
+    validating with baml-cli and looping on errors.
+    """
+    schema_block = site.inferred_schema or "(no nearby Pydantic class found — infer the shape from the prompt)"
+    notes = "\n".join(f"- {n}" for n in site.notes) or "- (none)"
+
+    name_block = ""
+    if taken_names:
+        joined = ", ".join(sorted(set(taken_names)))
+        name_block = (
+            "\n## Naming constraint\n\n"
+            f"The following class and function names are already used by other migrated files in this project "
+            f"and must NOT be re-used: {joined}. Pick distinct names (e.g. add a context-specific suffix or prefix)."
+        )
+
+    retry_block = ""
+    if previous_error and previous_attempt:
+        retry_block = (
+            "\n## Previous attempt failed validation\n\n"
+            "Your last output was rejected by `baml-cli check` with this error:\n\n"
+            f"```\n{previous_error.strip()}\n```\n\n"
+            "Here is what you generated last time:\n\n"
+            f"```baml\n{previous_attempt.strip()}\n```\n\n"
+            "Fix the error and regenerate the complete file."
+        )
+
+    prompt = PROMPT_TEMPLATE.format(
+        examples=examples,
+        pattern_type=site.pattern_type,
+        file=site.file,
+        line=site.line,
+        notes=notes,
+        schema_block=schema_block,
+        snippet=site.raw_snippet,
+        context=site.surrounding_context,
+        retry_block=retry_block + name_block,
+    )
+
+    raw = client.generate(prompt, system=SYSTEM_PROMPT)
+    baml = _strip_markdown_fences(raw)
+    fn_name = _detect_function_name(baml)
+    return baml, fn_name
+
+
+def python_usage_snippet(function_name: str, return_type: str | None = None, arg_hint: str = "...") -> str:
+    """Generate a tiny Python usage example showing how to invoke the BAML client."""
+    return (
+        "from baml_client import b\n\n"
+        f"result = b.{function_name}({arg_hint})\n"
+        "print(result)"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Env loading
+# ---------------------------------------------------------------------------
+
+
+def load_keys_from_env() -> list[str]:
+    """Read GEMINI_API_KEY (comma-separated for multi-key) from .env-loaded env."""
+    raw = os.environ.get("GEMINI_API_KEY", "")
+    if not raw:
+        return []
+    return [k.strip() for k in raw.split(",") if k.strip()]

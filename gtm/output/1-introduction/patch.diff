@@ -1,0 +1,212 @@
+diff --git a/baml_src/clients.baml b/baml_src/clients.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/clients.baml
+@@ -0,0 +1,23 @@
++client<llm> DefaultOpenAI {
++  provider openai
++  options {
++    model "gpt-4o-mini"
++    api_key env.OPENAI_API_KEY
++  }
++}
++
++client<llm> DefaultAnthropic {
++  provider anthropic
++  options {
++    model "claude-3-5-sonnet-20241022"
++    api_key env.ANTHROPIC_API_KEY
++  }
++}
++
++client<llm> DefaultGemini {
++  provider google-ai
++  options {
++    model "gemini-2.5-flash"
++    api_key env.GEMINI_API_KEY
++  }
++}
+diff --git a/baml_src/extractcalendarevent.baml b/baml_src/extractcalendarevent.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/extractcalendarevent.baml
+@@ -0,0 +1,23 @@
++class CalendarEvent {
++  name string
++  date string
++  participants string[]
++}
++
++function ExtractCalendarEvent(user_message: string) -> CalendarEvent {
++  client "openai/gpt-4o"
++  prompt #"
++    Extract the event information.
++
++    User: {{ user_message }}
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test science_fair {
++  functions [ExtractCalendarEvent]
++  args {
++    user_message "Alice and Bob are going to a science fair on Friday."
++  }
++}
+diff --git a/baml_src/generators.baml b/baml_src/generators.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/generators.baml
+@@ -0,0 +1,6 @@
++generator target {
++    output_type "python/pydantic"
++    output_dir "../"
++    version "0.222.0"
++    default_client_mode sync
++}
+diff --git a/baml_src/getreturnpolicytoolcall.baml b/baml_src/getreturnpolicytoolcall.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/getreturnpolicytoolcall.baml
+@@ -0,0 +1,22 @@
++class GetReturnPolicyArgs {
++  // No specific arguments are extracted for a general return policy query.
++  // The presence of this object indicates the tool should be called.
++}
++
++function GetReturnPolicyToolCall(user_message: string) -> GetReturnPolicyArgs {
++  client "openai/gpt-4o"
++  prompt #"
++    The user has asked a question. If it is about the return policy, extract the arguments for the `GetReturnPolicy` tool.
++
++    User: {{ user_message }}
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test return_policy_query {
++  functions [GetReturnPolicyToolCall]
++  args {
++    user_message "What is the return policy?"
++  }
++}
+diff --git a/baml_src/getweatherinfo.baml b/baml_src/getweatherinfo.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/getweatherinfo.baml
+@@ -0,0 +1,15 @@
++class WeatherResponse {
++  temperature float @description("The current temperature in celsius for the given location.")
++  response string @description("A natural language response to the user's question.")
++}
++
++function GetWeatherInfo(query: string) -> WeatherResponse {
++  client "openai/gpt-4o"
++  prompt #"
++    Based on the following query, provide the current temperature in Celsius and a natural language response.
++
++    Query: {{ query }}
++
++    {{ ctx.output_format }}
++  "#
++}
+diff --git a/baml_src/getweathertoolcall.baml b/baml_src/getweathertoolcall.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/getweathertoolcall.baml
+@@ -0,0 +1,23 @@
++class WeatherQuery {
++  location string
++  unit "celsius" | "fahrenheit"
++}
++
++function GetWeatherToolCall(user_message: string) -> WeatherQuery {
++  client "openai/gpt-4o"
++  prompt #"
++    The user has asked a weather question. Extract the location and the
++    requested temperature unit.
++
++    User: {{ user_message }}
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test weather_paris {
++  functions [GetWeatherToolCall]
++  args {
++    user_message "What's the weather like in Paris today?"
++  }
++}
+diff --git a/baml_src/getweathertoolcallargs.baml b/baml_src/getweathertoolcallargs.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/getweathertoolcallargs.baml
+@@ -0,0 +1,23 @@
++class WeatherToolQuery {
++  location string
++  unit "celsius" | "fahrenheit"
++}
++
++function GetWeatherToolCallArgs(user_message: string) -> WeatherToolQuery {
++  client "openai/gpt-4o"
++  prompt #"
++    The user has asked a weather question. Extract the location and the
++    requested temperature unit.
++
++    User: {{ user_message }}
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test tokyo_weather {
++  functions [GetWeatherToolCallArgs]
++  args {
++    user_message "What is the weather in Tokyo?"
++  }
++}
+diff --git a/baml_src/retrieveknowledgebaseanswer.baml b/baml_src/retrieveknowledgebaseanswer.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/retrieveknowledgebaseanswer.baml
+@@ -0,0 +1,16 @@
++class KBResponse {
++  answer string
++  source int
++}
++
++function RetrieveKnowledgeBaseAnswer(question: string) -> KBResponse {
++  client "openai/gpt-4o"
++  prompt #"
++    Answer the following question based on your knowledge.
++    Provide the answer and the record ID of the source.
++
++    Question: {{ question }}
++
++    {{ ctx.output_format }}
++  "#
++}
+diff --git a/baml_src/writelimerick.baml b/baml_src/writelimerick.baml
+new file mode 100644
+--- /dev/null
++++ b/baml_src/writelimerick.baml
+@@ -0,0 +1,16 @@
++function WriteLimerick(topic: string) -> string {
++  client "openai/gpt-4o"
++  prompt #"
++    You're a helpful assistant.
++    Write a limerick about the {{ topic }} programming language.
++
++    {{ ctx.output_format }}
++  "#
++}
++
++test python_limerick {
++  functions [WriteLimerick]
++  args {
++    topic "Python"
++  }
++}
