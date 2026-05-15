@@ -4,7 +4,9 @@ __pycache__/
 *.pyc
 .tmp_repos/
 .tmp_baml/
-baml_examples.md
+dist/
+build/
+*.egg-info/
 
 # baml-cli generate regenerable artifacts (sourced from baml_src/)
 output/*/baml_client/
