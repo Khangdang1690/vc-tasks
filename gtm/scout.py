@@ -29,10 +29,11 @@ from rich.panel import Panel
 from rich.table import Table
 
 import config
+from providers import DEFAULT_PROVIDER, PROVIDER_NAMES, Provider, ProviderError, get_provider
 from scanner import CallSite, iter_python_files, scan_file, scan_repo
 from translator import (
     FreeQuotaExhausted,
-    GeminiClient,
+    LLMClient,
     Translation,
     declared_names,
     load_keys_from_env,
@@ -182,27 +183,33 @@ _BAML_EXAMPLES_CACHE = Path(__file__).resolve().parent / "baml_examples.md"
 _TRANSLATION_ATTEMPTS = config.TRANSLATION_RETRIES + 1  # initial + retries
 
 
-def _translate_all(sites: list[CallSite], args) -> tuple[list[Translation], dict]:
+def _translate_all(sites: list[CallSite], args, provider: Provider) -> tuple[list[Translation], dict]:
     """Translate every CallSite. Validates each output with baml-cli check
     and retries up to TRANSLATION_RETRIES times with the compiler error in context.
     """
     load_dotenv()
-    keys = load_keys_from_env()
+    keys = load_keys_from_env(provider)
     if not keys:
+        signup_hint = (
+            "Get a free key at https://aistudio.google.com/."
+            if provider.name == "gemini"
+            else f"Set the {provider.api_key_env} env var with your {provider.name} key."
+        )
         console.print(Panel.fit(
-            "[red]GEMINI_API_KEY is not set.[/red]\n\n"
-            "Create a .env file in the project root with:\n"
-            "  GEMINI_API_KEY=your-key-here\n\n"
-            "Get a free key at https://aistudio.google.com/.",
+            f"[red]{provider.api_key_env} is not set.[/red]\n\n"
+            f"Create a .env file in the project root with:\n"
+            f"  {provider.api_key_env}=your-key-here\n\n"
+            f"{signup_hint}",
             border_style="red",
         ))
         sys.exit(2)
 
-    console.print(f"[dim]Loaded {len(keys)} Gemini key(s) from .env[/dim]")
+    console.print(f"[dim]Loaded {len(keys)} {provider.name} key(s) from .env[/dim]")
     examples = seed_baml_examples(_BAML_EXAMPLES_CACHE)
     console.print(f"[dim]Few-shot bundle: {len(examples):,} chars ({_BAML_EXAMPLES_CACHE.name})[/dim]")
 
-    client = GeminiClient(keys)
+    model = getattr(args, "model", None) or provider.default_model
+    client = LLMClient(keys, provider=provider, model=model)
     results: list[Translation] = []
     used_names: dict[str, int] = {}
     taken_names: list[str] = []  # cross-translation: class/enum/fn names already taken
@@ -284,7 +291,7 @@ def _translate_all(sites: list[CallSite], args) -> tuple[list[Translation], dict
     return results, _usage_dict(client)
 
 
-def _usage_dict(client: GeminiClient) -> dict:
+def _usage_dict(client: LLMClient) -> dict:
     return {
         "call_count": client.usage.call_count,
         "total_tokens": client.usage.total_tokens,
@@ -325,7 +332,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--benchmark",
         action="store_true",
-        help="Run head-to-head Gemini trials for measured deltas (extra LLM cost).",
+        help="Run head-to-head trials on the active provider for measured deltas (extra LLM cost).",
     )
     parser.add_argument(
         "--scan-only",
@@ -342,16 +349,62 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Enable debug logging to stderr (key rotation, dropped files, retries).",
     )
+    parser.add_argument(
+        "--provider",
+        choices=PROVIDER_NAMES,
+        default=DEFAULT_PROVIDER,
+        help=(
+            f"LLM provider for translation (default: {DEFAULT_PROVIDER}, free tier). "
+            f"openai and anthropic require their own paid keys and the matching SDK extra."
+        ),
+    )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help="Override the provider's default model (e.g. gpt-4o-mini, claude-3-5-sonnet-20241022).",
+    )
+    parser.add_argument(
+        "--yes",
+        action="store_true",
+        help="Skip the paid-provider confirmation prompt.",
+    )
     args = parser.parse_args(argv)
     configure_logging(verbose=args.verbose)
+
+    # Resolve provider early so we can fail fast on missing SDK / bad name,
+    # and gate paid providers behind an explicit confirmation. --scan-only
+    # skips this entirely since no LLM calls happen.
+    provider: Provider | None = None
+    if not args.scan_only:
+        try:
+            provider = get_provider(args.provider)
+        except ProviderError as e:
+            console.print(Panel.fit(f"[red]{e}[/red]", border_style="red"))
+            return 2
+        if not provider.free_tier and not args.yes:
+            console.print(Panel.fit(
+                f"[yellow]Provider {provider.name!r} is a PAID API.[/yellow]\n\n"
+                f"This run will bill calls against the API key in {provider.api_key_env}. "
+                f"Rough cost depends on repo size — see --scan-only to estimate sites first.\n\n"
+                f"Re-run with [bold]--yes[/bold] to confirm, or omit [bold]--provider[/bold] "
+                f"to fall back to the free-tier default ({DEFAULT_PROVIDER}).",
+                border_style="yellow",
+            ))
+            return 2
 
     workspace = Path(tempfile.mkdtemp(prefix="baml_scout_"))
     try:
         repo_root, name, is_single_file = _resolve_target(args.target, workspace)
+        provider_line = (
+            "—" if provider is None
+            else f"{provider.name} ({args.model or provider.default_model})"
+            + ("" if provider.free_tier else "  [yellow]PAID[/yellow]")
+        )
         console.print(Panel.fit(
             f"[bold]Target:[/bold] {args.target}\n"
             f"[bold]Resolved:[/bold] {repo_root}\n"
-            f"[bold]Mode:[/bold] {'single file' if is_single_file else 'repo walk'}",
+            f"[bold]Mode:[/bold] {'single file' if is_single_file else 'repo walk'}\n"
+            f"[bold]Provider:[/bold] {provider_line}",
             title="BAML Migration Scout",
             border_style="cyan",
         ))
@@ -367,7 +420,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
         # ---- Translate every site -------------------------------------
-        translations, usage_summary = _translate_all(sites, args)
+        assert provider is not None  # we returned early above if scan-only
+        translations, usage_summary = _translate_all(sites, args, provider)
         successes = [t for t in translations if t.success]
         failures = [t for t in translations if not t.success]
         if failures:
@@ -411,8 +465,12 @@ def main(argv: list[str] | None = None) -> int:
                 f"[dim]{target.baml_filename}[/dim] (richest schema among translated sites)"
             )
             try:
-                bench_client = GeminiClient(load_keys_from_env())
-                bench_result = benchmark_translation(bench_client, target, n_trials=5)
+                bench_client = LLMClient(
+                    load_keys_from_env(provider),
+                    provider=provider,
+                    model=args.model or provider.default_model,
+                )
+                bench_result = benchmark_translation(bench_client, target, n_trials=config.DEFAULT_BENCHMARK_TRIALS)
                 if bench_result:
                     usage_summary["total_tokens"] += bench_client.usage.total_tokens
                     usage_summary["call_count"] += bench_client.usage.call_count

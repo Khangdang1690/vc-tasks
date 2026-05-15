@@ -1,14 +1,15 @@
 """LLM-driven translation from a Python LLM call site to BAML.
 
 The translator takes a scanner.CallSite and produces a generated .baml file
-that captures the same intent in BAML's DSL. The Gemini call is grounded
+that captures the same intent in BAML's DSL. The provider call is grounded
 with a few-shot bundle (see seed_baml_examples) and the validator loops it
 back with the compiler error on failure.
 
-Constraints (per project brief):
-  * Gemini 2.5 Flash free tier only. Multi-key rotation on 429s. No fallback
-    to any paid API ever — exit cleanly when the last key is exhausted.
-  * Track tokens per call; warn at 80% of a conservative daily quota.
+Default provider is Gemini 2.5 Flash on the free tier ($0 budget). Multi-key
+rotation handles 429s and exits cleanly when keys are exhausted — never
+silently falls through to a different provider. Other providers (OpenAI,
+Anthropic) are supported through providers.py for users who explicitly
+opt in via `--provider`.
 """
 
 from __future__ import annotations
@@ -22,11 +23,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
-from google import genai
-from google.genai import errors as genai_errors
-from google.genai import types as genai_types
-
 import config
+from providers import (
+    DEFAULT_PROVIDER,
+    GenerationResult,
+    Provider,
+    ProviderError,
+    get_provider,
+)
 from scanner import CallSite
 from utils import get_logger, strip_markdown_fences
 
@@ -223,27 +227,42 @@ class TokenUsage:
 
 
 class FreeQuotaExhausted(RuntimeError):
-    """All configured Gemini keys have hit rate / quota limits."""
+    """All configured provider keys have hit rate / quota limits.
 
-
-class GeminiClient:
-    """Gemini wrapper that rotates keys on rate limits and exits on exhaustion.
-
-    Never falls back to any paid API. If every key is rate-limited, raises
-    FreeQuotaExhausted which the CLI surfaces as a clean error and exits.
+    Name kept historical for backwards-compat — applies to any provider that
+    exhausts its keys without falling through to another paid API.
     """
 
-    def __init__(self, keys: Iterable[str], model: str = MODEL):
+
+class LLMClient:
+    """Provider-agnostic client that rotates keys on rate limits and exits
+    cleanly on exhaustion.
+
+    Never silently switches providers. If every key for the active provider
+    is rate-limited, raises FreeQuotaExhausted which the CLI surfaces as a
+    clean error.
+    """
+
+    def __init__(
+        self,
+        keys: Iterable[str],
+        provider: Provider | None = None,
+        model: str | None = None,
+    ):
         cleaned = [k.strip() for k in keys if k and k.strip()]
         if not cleaned:
-            raise ValueError("No Gemini API keys provided. Set GEMINI_API_KEY in .env.")
+            raise ValueError("No API keys provided. Set the appropriate API_KEY env var.")
+        self.provider: Provider = provider if provider is not None else get_provider(DEFAULT_PROVIDER)
+        self.model = model or self.provider.default_model
         self.keys = cleaned
-        self.model = model
         self._idx = 0
         self._exhausted: set[int] = set()
         self.usage = TokenUsage()
-        self._client = genai.Client(api_key=self.keys[self._idx])
-        log.debug("GeminiClient initialized: model=%s keys=%d", model, len(self.keys))
+        self._client = self.provider.make_client(self.keys[self._idx])
+        log.debug(
+            "LLMClient initialized: provider=%s model=%s keys=%d free_tier=%s",
+            self.provider.name, self.model, len(self.keys), self.provider.free_tier,
+        )
 
     @property
     def current_key_label(self) -> str:
@@ -256,8 +275,8 @@ class GeminiClient:
         for i in range(len(self.keys)):
             if i not in self._exhausted:
                 self._idx = i
-                self._client = genai.Client(api_key=self.keys[i])
-                log.info("rotated Gemini key: now using %s", self.current_key_label)
+                self._client = self.provider.make_client(self.keys[i])
+                log.info("rotated %s key: now using %s", self.provider.name, self.current_key_label)
                 return True
         return False
 
@@ -267,75 +286,86 @@ class GeminiClient:
         system: str | None = None,
         max_retries_per_key: int = config.GEMINI_MAX_RETRIES_PER_KEY,
     ) -> str:
-        """Run a single Gemini generation, rotating keys on rate-limit errors.
+        """Run a single generation, rotating keys on rate-limit errors.
 
         Returns the text response. Tracks usage on self.usage.
         """
-        gen_config = genai_types.GenerateContentConfig(
-            system_instruction=system,
-            temperature=config.DEFAULT_TEMPERATURE,
-            # Keep responses tight — we want code, not commentary.
-            max_output_tokens=config.DEFAULT_MAX_OUTPUT_TOKENS,
-            # Hard ceiling on a single Gemini call so a wedged backend can't
-            # deadlock the scout.
-            http_options=genai_types.HttpOptions(timeout=config.TIMEOUT_GEMINI_CALL * 1000),
-        )
-
         attempts = 0
         while True:
             attempts += 1
             try:
-                resp = self._client.models.generate_content(
+                result: GenerationResult = self.provider.generate(
+                    client=self._client,
+                    prompt=prompt,
+                    system=system,
                     model=self.model,
-                    contents=prompt,
-                    config=gen_config,
+                    temperature=config.DEFAULT_TEMPERATURE,
+                    max_output_tokens=config.DEFAULT_MAX_OUTPUT_TOKENS,
+                    timeout_s=config.TIMEOUT_GEMINI_CALL,
                 )
-                if resp.usage_metadata:
-                    self.usage.add(
-                        prompt=resp.usage_metadata.prompt_token_count or 0,
-                        output=resp.usage_metadata.candidates_token_count or 0,
-                    )
-                text = (resp.text or "").strip()
-                if not text:
-                    raise RuntimeError(f"Empty response from Gemini ({self.current_key_label})")
-                return text
-
-            except genai_errors.ClientError as e:
-                code = getattr(e, "code", None)
-                # 429 / RESOURCE_EXHAUSTED → rotate. Anything else → raise.
-                msg = str(e).lower()
-                if code == 429 or "resource_exhausted" in msg or "rate" in msg or "quota" in msg:
-                    log.warning("rate-limit on %s (code=%s); rotating", self.current_key_label, code)
+            except BaseException as e:
+                if self.provider.is_rate_limit_error(e):
+                    log.warning("rate-limit on %s (%s); rotating", self.provider.name, self.current_key_label)
                     if not self._rotate():
                         raise FreeQuotaExhausted(
-                            "All Gemini API keys are rate-limited or exhausted. "
-                            "Wait for the daily reset (midnight Pacific) or add another key to GEMINI_API_KEY."
+                            f"All {self.provider.name} API keys are rate-limited or exhausted. "
+                            + self._exhaustion_hint()
                         ) from e
-                    # short backoff then retry on the new key
                     time.sleep(config.GEMINI_BACKOFF_AFTER_ROTATE)
+                    continue
+                if self.provider.is_server_error(e):
+                    log.warning("%s 5xx on %s (attempt %d): %s", self.provider.name, self.current_key_label, attempts, e)
+                    if attempts <= max_retries_per_key:
+                        time.sleep(config.GEMINI_BACKOFF_AFTER_5XX)
+                        continue
+                    if not self._rotate():
+                        raise FreeQuotaExhausted(
+                            f"All {self.provider.name} keys returned server errors; bailing rather than retry-loop."
+                        ) from e
+                    attempts = 0
                     continue
                 raise
 
-            except genai_errors.ServerError as e:
-                # transient 5xx — retry once on same key, then rotate
-                log.warning("Gemini 5xx on %s (attempt %d): %s", self.current_key_label, attempts, e)
-                if attempts <= max_retries_per_key:
-                    time.sleep(config.GEMINI_BACKOFF_AFTER_5XX)
-                    continue
-                if not self._rotate():
-                    raise FreeQuotaExhausted(
-                        "All Gemini keys returned server errors; bailing rather than retry-loop."
-                    ) from e
-                attempts = 0  # reset counter for the new key
+            if result.prompt_tokens or result.output_tokens:
+                self.usage.add(result.prompt_tokens, result.output_tokens)
+            if not result.text:
+                raise RuntimeError(
+                    f"Empty response from {self.provider.name} ({self.current_key_label})"
+                )
+            return result.text
+
+    def _exhaustion_hint(self) -> str:
+        if self.provider.free_tier:
+            return (
+                f"Wait for the daily reset or add another key to {self.provider.api_key_env}."
+            )
+        return f"Rotate to a fresh key or raise your {self.provider.name} rate limits."
 
     def quota_warning(self) -> str | None:
+        # Only meaningful for free-tier providers — for paid, the user manages
+        # their own spend, and a "you used a lot of tokens" warning is noise.
+        if not self.provider.free_tier:
+            return None
         if self.usage.total_tokens >= WARN_AT:
             return (
                 f"Session has consumed {self.usage.total_tokens:,} tokens "
                 f"({self.usage.total_tokens / DAILY_TOKEN_SOFT_LIMIT:.0%} of the ~1M/day free-tier ceiling). "
-                f"Consider stopping or adding another GEMINI_API_KEY."
+                f"Consider stopping or adding another {self.provider.api_key_env}."
             )
         return None
+
+
+# Backwards-compat alias: existing imports of GeminiClient still work, now
+# routed through the provider abstraction with Gemini as default.
+class GeminiClient(LLMClient):
+    """Backwards-compat wrapper: LLMClient pinned to Gemini.
+
+    New code should construct `LLMClient(keys, provider=get_provider("..."))`
+    directly. This subclass exists so older entry points keep working.
+    """
+
+    def __init__(self, keys: Iterable[str], model: str = MODEL):
+        super().__init__(keys=keys, provider=get_provider("gemini"), model=model)
 
 
 # ---------------------------------------------------------------------------
@@ -522,9 +552,15 @@ def python_usage_snippet(function_name: str, return_type: str | None = None, arg
 # ---------------------------------------------------------------------------
 
 
-def load_keys_from_env() -> list[str]:
-    """Read GEMINI_API_KEY (comma-separated for multi-key) from .env-loaded env."""
-    raw = os.environ.get("GEMINI_API_KEY", "")
+def load_keys_from_env(provider: Provider | None = None) -> list[str]:
+    """Read the provider's API key env var (comma-separated for multi-key).
+
+    Defaults to Gemini (GEMINI_API_KEY) when no provider is given, preserving
+    the original signature. Multi-key splitting makes sense for free-tier
+    rotation; for paid providers it usually resolves to a single key.
+    """
+    env_var = provider.api_key_env if provider is not None else "GEMINI_API_KEY"
+    raw = os.environ.get(env_var, "")
     if not raw:
         return []
     return [k.strip() for k in raw.split(",") if k.strip()]

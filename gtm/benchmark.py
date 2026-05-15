@@ -1,7 +1,9 @@
 """Optional benchmark mode (--benchmark).
 
-For each translated call site we picked first, run N=5 trials on Gemini 2.5
-Flash comparing two prompt formats on the same synthetic input:
+For each translated call site, run N trials against whichever provider is
+active (Gemini by default; OpenAI or Anthropic if the user opted in via
+--provider). Each trial compares two prompt formats on the same synthetic
+input:
 
     1. **Original-style**: the prompt template + an inlined JSON Schema (what
        OpenAI's response_format / instructor / LangChain output parsers
@@ -10,15 +12,14 @@ Flash comparing two prompt formats on the same synthetic input:
        rendering (the equivalent of {{ ctx.output_format }} expansion).
 
 We measure for each trial:
-    - prompt + output tokens (via Gemini usage_metadata)
+    - prompt + output tokens (heuristic char/4 — both sides use the same
+      heuristic so the delta between formats is meaningful)
     - end-to-end latency (wall clock from request to response)
     - schema-validity: does the output parse as JSON and contain the
       declared fields?
 
-Aggregate as p50s / pass rates. The reporter then renders measured deltas
-in place of static estimates.
-
-Constraint: still Gemini-only, still free-tier. No OpenAI / Anthropic.
+Aggregate as p50s / pass rates. The reporter renders measured deltas in
+place of static estimates.
 """
 
 from __future__ import annotations
@@ -31,7 +32,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from config import DEFAULT_BENCHMARK_TRIALS
-from translator import GeminiClient, FreeQuotaExhausted, Translation
+from translator import FreeQuotaExhausted, LLMClient, Translation
 from utils import estimate_tokens, get_logger, strip_markdown_fences
 
 
@@ -327,11 +328,11 @@ def _synthesize_input(args: dict[str, str]) -> dict[str, Any]:
 
 
 def _run_trial(
-    client: GeminiClient,
+    client: LLMClient,
     full_prompt: str,
     schema: dict,
 ) -> TrialResult:
-    """Single Gemini call. Measure tokens, latency, parse success."""
+    """Single provider call. Measure tokens, latency, parse success."""
     t0 = time.monotonic()
     try:
         text = client.generate(full_prompt)
@@ -382,7 +383,7 @@ def _validate_against_schema(raw: str, schema: dict) -> bool:
 
 
 def benchmark_translation(
-    client: GeminiClient,
+    client: LLMClient,
     translation: Translation,
     n_trials: int = DEFAULT_BENCHMARK_TRIALS,
 ) -> BenchmarkResult | None:
