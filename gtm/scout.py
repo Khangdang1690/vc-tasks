@@ -3,10 +3,8 @@
 Point it at a GitHub repo (or local path) and it'll:
   1. clone the repo (or read the local path),
   2. find every LLM call site via AST scanning,
-  3. (Phase 2+) translate each to BAML and validate with baml-cli,
-  4. (Phase 3+) emit a migration report.
-
-Phase 1 ships scan-only — Phases 2/3 wire in below as they land.
+  3. translate each to BAML and validate with baml-cli,
+  4. emit a migration report.
 
 Usage:
     uv run python scout.py https://github.com/owner/repo
@@ -19,6 +17,7 @@ from __future__ import annotations
 import argparse
 import io
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -29,7 +28,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from scanner import CallSite, scan_file, scan_repo
+import config
+from scanner import CallSite, iter_python_files, scan_file, scan_repo
 from translator import (
     FreeQuotaExhausted,
     GeminiClient,
@@ -43,6 +43,10 @@ from translator import (
 from validator import validate_baml_file, write_baml_project, run_generate
 from reporter import build_context, render_report, write_patch_diff
 from benchmark import benchmark_translation
+from utils import configure_logging, get_logger
+
+
+log = get_logger(__name__)
 
 
 # Force UTF-8 stdout on Windows so rich can render box-drawing chars cleanly.
@@ -78,14 +82,23 @@ def _repo_name_from_url(url: str) -> str:
 
 def _clone_repo(url: str, dest: Path) -> Path:
     """Shallow-clone a GitHub repo into dest. Uses git CLI for portability."""
-    import subprocess
-
     console.print(f"[dim]Cloning [bold]{url}[/bold] → {dest}[/dim]")
-    result = subprocess.run(
-        ["git", "clone", "--depth", "1", "--quiet", url, str(dest)],
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "clone", "--depth", "1", "--quiet", url, str(dest)],
+            capture_output=True,
+            text=True,
+            timeout=config.TIMEOUT_GIT_CLONE,
+        )
+    except subprocess.TimeoutExpired:
+        console.print(
+            f"[red]git clone timed out after {config.TIMEOUT_GIT_CLONE}s.[/red] "
+            "Network slow, or the repo is huge."
+        )
+        sys.exit(2)
+    except FileNotFoundError:
+        console.print("[red]git is not on PATH.[/red] Install Git and try again.")
+        sys.exit(2)
     if result.returncode != 0:
         console.print(f"[red]git clone failed:[/red] {result.stderr.strip()}")
         sys.exit(2)
@@ -113,7 +126,7 @@ def _resolve_target(target: str, workspace: Path) -> tuple[Path, str, bool]:
     return p, p.name, False
 
 
-# -- phase 1 reporting -----------------------------------------------------
+# -- scan summary ----------------------------------------------------------
 
 
 def _print_summary(sites: list[CallSite], target_label: str) -> None:
@@ -162,15 +175,16 @@ def _print_summary(sites: list[CallSite], target_label: str) -> None:
     console.print(f"[dim]By pattern → {summary}[/dim]")
 
 
-# -- phase 2 orchestration -------------------------------------------------
+# -- translation orchestration ---------------------------------------------
 
 
 _BAML_EXAMPLES_CACHE = Path(__file__).resolve().parent / "baml_examples.md"
+_TRANSLATION_ATTEMPTS = config.TRANSLATION_RETRIES + 1  # initial + retries
 
 
 def _translate_all(sites: list[CallSite], args) -> tuple[list[Translation], dict]:
     """Translate every CallSite. Validates each output with baml-cli check
-    and retries up to 2 times with the compiler error in context.
+    and retries up to TRANSLATION_RETRIES times with the compiler error in context.
     """
     load_dotenv()
     keys = load_keys_from_env()
@@ -202,7 +216,7 @@ def _translate_all(sites: list[CallSite], args) -> tuple[list[Translation], dict
         previous_error: str | None = None
         previous_attempt: str | None = None
 
-        for attempt in range(1, 4):  # 1 initial + 2 retries
+        for attempt in range(1, _TRANSLATION_ATTEMPTS + 1):
             t.attempts = attempt
             try:
                 baml, fn_name = translate_site(
@@ -229,7 +243,7 @@ def _translate_all(sites: list[CallSite], args) -> tuple[list[Translation], dict
                 # translation, retry with the constraint visible to the LLM.
                 new_names = declared_names(baml)
                 collisions = [n for n in new_names if n in taken_names]
-                if collisions and attempt < 3:
+                if collisions and attempt < _TRANSLATION_ATTEMPTS:
                     console.print(f"[yellow]  attempt {attempt} produced name collision(s): {collisions}; retrying[/yellow]")
                     previous_error = (
                         f"The names {collisions} are already used by other migrated files "
@@ -251,7 +265,7 @@ def _translate_all(sites: list[CallSite], args) -> tuple[list[Translation], dict
                 previous_attempt = baml
 
         if not t.success and not t.error:
-            t.error = "baml-cli check rejected all 3 attempts"
+            t.error = f"baml-cli check rejected all {_TRANSLATION_ATTEMPTS} attempts"
 
         console.print(
             f"  [green]ok[/green] {t.baml_filename}" if t.success
@@ -311,19 +325,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--benchmark",
         action="store_true",
-        help="(Phase 4) Run head-to-head Gemini trials for measured deltas.",
+        help="Run head-to-head Gemini trials for measured deltas (extra LLM cost).",
     )
     parser.add_argument(
         "--scan-only",
         action="store_true",
-        help="Run Phase 1 only — detect call sites and exit without translating.",
+        help="Detect call sites and exit without translating (no LLM calls).",
     )
     parser.add_argument(
         "--keep-clone",
         action="store_true",
         help="Don't delete the cloned repo after scanning.",
     )
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Enable debug logging to stderr (key rotation, dropped files, retries).",
+    )
     args = parser.parse_args(argv)
+    configure_logging(verbose=args.verbose)
 
     workspace = Path(tempfile.mkdtemp(prefix="baml_scout_"))
     try:
@@ -346,7 +366,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.scan_only or not sites:
             return 0
 
-        # ---- Phase 2: translate every site -----------------------------
+        # ---- Translate every site -------------------------------------
         translations, usage_summary = _translate_all(sites, args)
         successes = [t for t in translations if t.success]
         failures = [t for t in translations if not t.success]
@@ -358,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             console.print(f"[bold green]Translated all {len(translations)} sites[/bold green]")
 
-        # ---- Phase 3: write baml_src/, run generate, render report -----
+        # ---- Write baml_src/, run generate, render report --------------
         out_dir = args.out / name
         baml_src = out_dir / "baml_src"
         files = {
@@ -375,7 +395,7 @@ def main(argv: list[str] | None = None) -> int:
                 console.print(f"[yellow]baml-cli generate had issues:[/yellow]\n{gen.stderr.strip()[:500]}")
             write_patch_diff(baml_src, out_dir / "patch.diff")
 
-        files_scanned = sum(1 for _ in repo_root.rglob("*.py") if not any(p in {".git", ".venv", "node_modules", "__pycache__"} for p in _.parts))
+        files_scanned = sum(1 for _ in iter_python_files(repo_root))
 
         bench_result = None
         if args.benchmark and successes:

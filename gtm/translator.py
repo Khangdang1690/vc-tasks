@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import os
 import re
-import shutil
 import subprocess
 import tempfile
 import time
@@ -27,14 +26,19 @@ from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types as genai_types
 
+import config
 from scanner import CallSite
+from utils import get_logger, strip_markdown_fences
 
 
-# Gemini 2.5 Flash free tier sustained budget. The published number changes
-# but we treat ~1M tokens/day as the conservative ceiling and warn at 80%.
-DAILY_TOKEN_SOFT_LIMIT = 1_000_000
-WARN_AT = int(DAILY_TOKEN_SOFT_LIMIT * 0.8)
-MODEL = "gemini-2.5-flash"
+log = get_logger(__name__)
+
+
+# Re-export config constants under their historical names so any external
+# importer that read MODEL / WARN_AT / DAILY_TOKEN_SOFT_LIMIT still works.
+DAILY_TOKEN_SOFT_LIMIT = config.DAILY_TOKEN_SOFT_LIMIT
+WARN_AT = config.QUOTA_WARN_AT
+MODEL = config.DEFAULT_MODEL
 
 
 # ---------------------------------------------------------------------------
@@ -54,13 +58,24 @@ def seed_baml_examples(cache_path: Path, force: bool = False) -> str:
         return cache_path.read_text(encoding="utf-8")
 
     with tempfile.TemporaryDirectory(prefix="baml_seed_") as tmp:
-        result = subprocess.run(
-            ["baml-cli", "init"],
-            cwd=tmp,
-            capture_output=True,
-            text=True,
-            shell=True,
-        )
+        try:
+            result = subprocess.run(
+                [config.BAML_CLI, "init"],
+                cwd=tmp,
+                capture_output=True,
+                text=True,
+                shell=True,
+                timeout=config.TIMEOUT_BAML_INIT,
+            )
+        except subprocess.TimeoutExpired as e:
+            raise RuntimeError(
+                f"baml-cli init timed out after {config.TIMEOUT_BAML_INIT}s. "
+                "Is `baml-cli` installed and on PATH?"
+            ) from e
+        except FileNotFoundError as e:
+            raise RuntimeError(
+                "baml-cli is not on PATH. Install with `npm install -g @boundaryml/baml`."
+            ) from e
         if result.returncode != 0:
             raise RuntimeError(
                 f"baml-cli init failed (rc={result.returncode}): {result.stderr.strip()}\n"
@@ -228,6 +243,7 @@ class GeminiClient:
         self._exhausted: set[int] = set()
         self.usage = TokenUsage()
         self._client = genai.Client(api_key=self.keys[self._idx])
+        log.debug("GeminiClient initialized: model=%s keys=%d", model, len(self.keys))
 
     @property
     def current_key_label(self) -> str:
@@ -241,30 +257,38 @@ class GeminiClient:
             if i not in self._exhausted:
                 self._idx = i
                 self._client = genai.Client(api_key=self.keys[i])
+                log.info("rotated Gemini key: now using %s", self.current_key_label)
                 return True
         return False
 
-    def generate(self, prompt: str, system: str | None = None, max_retries_per_key: int = 1) -> str:
+    def generate(
+        self,
+        prompt: str,
+        system: str | None = None,
+        max_retries_per_key: int = config.GEMINI_MAX_RETRIES_PER_KEY,
+    ) -> str:
         """Run a single Gemini generation, rotating keys on rate-limit errors.
 
         Returns the text response. Tracks usage on self.usage.
         """
-        config = genai_types.GenerateContentConfig(
+        gen_config = genai_types.GenerateContentConfig(
             system_instruction=system,
-            temperature=0.1,
+            temperature=config.DEFAULT_TEMPERATURE,
             # Keep responses tight — we want code, not commentary.
-            max_output_tokens=2048,
+            max_output_tokens=config.DEFAULT_MAX_OUTPUT_TOKENS,
+            # Hard ceiling on a single Gemini call so a wedged backend can't
+            # deadlock the scout.
+            http_options=genai_types.HttpOptions(timeout=config.TIMEOUT_GEMINI_CALL * 1000),
         )
 
         attempts = 0
-        last_err: Exception | None = None
         while True:
             attempts += 1
             try:
                 resp = self._client.models.generate_content(
                     model=self.model,
                     contents=prompt,
-                    config=config,
+                    config=gen_config,
                 )
                 if resp.usage_metadata:
                     self.usage.add(
@@ -277,26 +301,26 @@ class GeminiClient:
                 return text
 
             except genai_errors.ClientError as e:
-                last_err = e
                 code = getattr(e, "code", None)
                 # 429 / RESOURCE_EXHAUSTED → rotate. Anything else → raise.
                 msg = str(e).lower()
                 if code == 429 or "resource_exhausted" in msg or "rate" in msg or "quota" in msg:
+                    log.warning("rate-limit on %s (code=%s); rotating", self.current_key_label, code)
                     if not self._rotate():
                         raise FreeQuotaExhausted(
                             "All Gemini API keys are rate-limited or exhausted. "
                             "Wait for the daily reset (midnight Pacific) or add another key to GEMINI_API_KEY."
                         ) from e
                     # short backoff then retry on the new key
-                    time.sleep(0.5)
+                    time.sleep(config.GEMINI_BACKOFF_AFTER_ROTATE)
                     continue
                 raise
 
             except genai_errors.ServerError as e:
                 # transient 5xx — retry once on same key, then rotate
-                last_err = e
+                log.warning("Gemini 5xx on %s (attempt %d): %s", self.current_key_label, attempts, e)
                 if attempts <= max_retries_per_key:
-                    time.sleep(1.0)
+                    time.sleep(config.GEMINI_BACKOFF_AFTER_5XX)
                     continue
                 if not self._rotate():
                     raise FreeQuotaExhausted(
@@ -424,20 +448,6 @@ def _slugify(name: str) -> str:
     return s or "migrated"
 
 
-def _strip_markdown_fences(text: str) -> str:
-    """Sometimes the model wraps output in ```baml fences — strip them."""
-    text = text.strip()
-    if text.startswith("```"):
-        # drop first fence line
-        first_nl = text.find("\n")
-        if first_nl != -1:
-            text = text[first_nl + 1 :]
-        # drop trailing fence
-        if text.endswith("```"):
-            text = text[: -3]
-    return text.strip()
-
-
 def _detect_function_name(baml: str) -> str | None:
     m = _FUNC_RE.search(baml)
     return m.group(1) if m else None
@@ -492,8 +502,9 @@ def translate_site(
     )
 
     raw = client.generate(prompt, system=SYSTEM_PROMPT)
-    baml = _strip_markdown_fences(raw)
+    baml = strip_markdown_fences(raw)
     fn_name = _detect_function_name(baml)
+    log.debug("translated %s → fn=%s (%d chars)", site.display_id(), fn_name, len(baml))
     return baml, fn_name
 
 

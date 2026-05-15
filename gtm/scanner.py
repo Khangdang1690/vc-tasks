@@ -22,6 +22,21 @@ import ast
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from config import (
+    RAW_JSON_AFTER_WINDOW,
+    SCAN_CONTEXT_AFTER,
+    SCAN_CONTEXT_BEFORE,
+    SKIP_DIRS,
+)
+from utils import get_logger
+
+
+log = get_logger(__name__)
+
+
+# Re-exported for any caller that historically imported scanner._SKIP_DIRS.
+_SKIP_DIRS = SKIP_DIRS
+
 
 PATTERN_TYPES = (
     "openai",
@@ -83,7 +98,12 @@ def _snippet(source: str, lineno: int, end_lineno: int | None) -> str:
     return "\n".join(lines[start:end])
 
 
-def _context_window(source: str, lineno: int, before: int = 5, after: int = 8) -> str:
+def _context_window(
+    source: str,
+    lineno: int,
+    before: int = SCAN_CONTEXT_BEFORE,
+    after: int = SCAN_CONTEXT_AFTER,
+) -> str:
     lines = source.splitlines()
     start = max(lineno - 1 - before, 0)
     end = min(lineno + after, len(lines))
@@ -278,9 +298,9 @@ class _LLMCallVisitor(ast.NodeVisitor):
         last_llm_line = self._recent_llm_lines[-1]
         if last_llm_line < 0:
             return
-        # Heuristic: json.loads within ~6 lines after the last LLM call in
-        # this function counts as a raw-parse pattern worth migrating.
-        if 0 < (node.lineno - last_llm_line) <= 6:
+        # Heuristic: json.loads within RAW_JSON_AFTER_WINDOW lines after the
+        # last LLM call in this function counts as a raw-parse pattern.
+        if 0 < (node.lineno - last_llm_line) <= RAW_JSON_AFTER_WINDOW:
             site = self._build_site(node, "raw_json_after")
             site.notes.append(f"follows LLM call at line {last_llm_line}")
             self.sites.append(site)
@@ -332,15 +352,21 @@ def _collect_pydantic_classes(tree: ast.Module, source: str) -> dict[str, str]:
 
 
 def scan_file(path: Path, repo_root: Path) -> list[CallSite]:
-    """Scan a single Python file and return any LLM call sites found."""
+    """Scan a single Python file and return any LLM call sites found.
+
+    Files that fail to decode or parse are skipped with a debug log so a
+    --verbose run can show which files were dropped.
+    """
     try:
         source = path.read_text(encoding="utf-8")
-    except (UnicodeDecodeError, OSError):
+    except (UnicodeDecodeError, OSError) as e:
+        log.debug("skip %s: %s", path, e)
         return []
 
     try:
         tree = ast.parse(source, filename=str(path))
-    except SyntaxError:
+    except SyntaxError as e:
+        log.debug("skip %s: syntax error at line %s", path, e.lineno)
         return []
 
     pydantic_classes = _collect_pydantic_classes(tree, source)
@@ -350,31 +376,23 @@ def scan_file(path: Path, repo_root: Path) -> list[CallSite]:
     return visitor.sites
 
 
-# Directory and filename patterns we skip during repo walks.
-_SKIP_DIRS = {
-    ".git",
-    ".venv",
-    "venv",
-    "env",
-    "node_modules",
-    "__pycache__",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    "dist",
-    "build",
-    "site-packages",
-    ".tox",
-    ".idea",
-    ".vscode",
-}
+def iter_python_files(repo_root: Path):
+    """Yield every .py path under repo_root that isn't in a skipped directory.
+
+    Shared with scout.py's file-count helper so the two can never drift.
+    """
+    for path in repo_root.rglob("*.py"):
+        if any(part in SKIP_DIRS for part in path.parts):
+            continue
+        yield path
 
 
 def scan_repo(repo_root: Path) -> list[CallSite]:
     """Walk a repo root and return CallSites across every .py file."""
     sites: list[CallSite] = []
-    for path in repo_root.rglob("*.py"):
-        if any(part in _SKIP_DIRS for part in path.parts):
-            continue
+    files = 0
+    for path in iter_python_files(repo_root):
+        files += 1
         sites.extend(scan_file(path, repo_root))
+    log.debug("scan_repo: walked %d files under %s, found %d sites", files, repo_root, len(sites))
     return sites

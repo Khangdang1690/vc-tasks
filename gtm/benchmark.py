@@ -30,7 +30,12 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
+from config import DEFAULT_BENCHMARK_TRIALS
 from translator import GeminiClient, FreeQuotaExhausted, Translation
+from utils import estimate_tokens, get_logger, strip_markdown_fences
+
+
+log = get_logger(__name__)
 
 
 @dataclass
@@ -336,14 +341,12 @@ def _run_trial(
         return TrialResult(0, 0, 0, False, error=str(e))
     latency_ms = (time.monotonic() - t0) * 1000
 
-    # Track most-recent usage out of the GeminiClient. Since we call generate()
-    # which updates client.usage, we can read the increments by snapshotting.
-    # Simpler: re-derive from prompt char count if usage isn't easily diffable.
-    # GeminiClient stores total; we know we just made one call, so query the
-    # last delta via call_count is awkward. Use char/4 heuristic for trial-level
-    # measurement.
-    prompt_tokens = max(1, len(full_prompt) // 4)
-    output_tokens = max(1, len(text) // 4)
+    # client.usage tracks running totals, not per-call deltas, so we fall back
+    # to the chars/CHARS_PER_TOKEN heuristic for trial-level measurement.
+    # Both prompts in a head-to-head pair use the same heuristic so the delta
+    # between formats is meaningful even if the absolute number is rough.
+    prompt_tokens = estimate_tokens(full_prompt)
+    output_tokens = estimate_tokens(text)
 
     schema_valid = _validate_against_schema(text, schema)
     return TrialResult(
@@ -356,15 +359,7 @@ def _run_trial(
 
 def _validate_against_schema(raw: str, schema: dict) -> bool:
     """Best-effort: does the output parse as JSON and contain the required keys?"""
-    text = raw.strip()
-    # Strip markdown JSON fences if present
-    if text.startswith("```"):
-        first_nl = text.find("\n")
-        if first_nl != -1:
-            text = text[first_nl + 1:]
-        if text.endswith("```"):
-            text = text[:-3]
-        text = text.strip()
+    text = strip_markdown_fences(raw)
     try:
         parsed = json.loads(text)
     except (ValueError, json.JSONDecodeError):
@@ -389,7 +384,7 @@ def _validate_against_schema(raw: str, schema: dict) -> bool:
 def benchmark_translation(
     client: GeminiClient,
     translation: Translation,
-    n_trials: int = 5,
+    n_trials: int = DEFAULT_BENCHMARK_TRIALS,
 ) -> BenchmarkResult | None:
     """Run a head-to-head trial comparing the two prompt formats."""
     if not translation.success or not translation.baml_source:

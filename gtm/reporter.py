@@ -16,13 +16,25 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from config import (
+    CHARS_PER_TOKEN,
+    JSON_SCHEMA_BASE_OVERHEAD,
+    JSON_SCHEMA_BYTES_PER_FIELD,
+    TIMEOUT_GIT_GENERIC,
+)
 from scanner import CallSite
 from translator import Translation
 from benchmark import BenchmarkResult
+from utils import estimate_tokens, get_logger
+
+
+log = get_logger(__name__)
 
 
 _TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
-_CHARS_PER_TOKEN = 4  # standard rough estimate
+# Kept for backwards-compat with any importer that read this; new code should
+# import CHARS_PER_TOKEN from config.
+_CHARS_PER_TOKEN = CHARS_PER_TOKEN
 
 
 @dataclass
@@ -36,16 +48,10 @@ class DeltaEstimate:
     schema_ratio_str: str  # e.g. "−68% (3.1× compaction)"
 
 
-def _estimate_tokens(text: str) -> int:
-    return max(1, len(text) // _CHARS_PER_TOKEN)
-
-
-# Heuristic JSON-Schema bytes per field. A flat field like
-# `name: string` becomes `{"name": {"type": "string"}}` plus a slot in the
-# `properties` object and a mention in `required` — call it ~30 chars per
-# field for the common case. Nested classes add a bit more.
-_JSON_SCHEMA_BYTES_PER_FIELD = 30
-_JSON_SCHEMA_BASE_OVERHEAD = 80  # the outer wrapper: {"type": "object", "properties": {...}, "required": [...], ...}
+# Heuristic JSON-Schema bytes per field. Sourced from config so a future
+# calibration pass against measured schemas only edits one file.
+_JSON_SCHEMA_BYTES_PER_FIELD = JSON_SCHEMA_BYTES_PER_FIELD
+_JSON_SCHEMA_BASE_OVERHEAD = JSON_SCHEMA_BASE_OVERHEAD
 
 
 _BAML_FIELD_RE = re.compile(r"^\s*[A-Za-z_][A-Za-z0-9_]*\s+", re.MULTILINE)
@@ -92,8 +98,8 @@ def compute_delta(translations: list[Translation]) -> DeltaEstimate:
         baml_total += _baml_schema_chars(t.baml_source)
         orig_total += _estimate_json_schema_chars(t.baml_source)
 
-    baml_tokens = _estimate_tokens(_to_text(baml_total))
-    orig_tokens = _estimate_tokens(_to_text(orig_total))
+    baml_tokens = estimate_tokens(_to_text(baml_total))
+    orig_tokens = estimate_tokens(_to_text(orig_total))
     saved = max(0, orig_tokens - baml_tokens)
 
     if orig_total > 0 and baml_total > 0:
@@ -117,7 +123,7 @@ def compute_delta(translations: list[Translation]) -> DeltaEstimate:
 
 
 def _to_text(chars: int) -> str:
-    """Helper — _estimate_tokens takes a string, not a char count."""
+    """Helper — estimate_tokens takes a string, not a char count."""
     return "x" * chars
 
 
@@ -221,15 +227,20 @@ def render_report(ctx: ReportContext) -> str:
 
 
 def get_commit_sha(repo_path: Path) -> str | None:
+    """Return HEAD SHA of repo_path or None if it isn't a git repo / git missing.
+
+    Failures here are non-fatal: the report just omits the commit field.
+    """
     try:
         result = subprocess.run(
             ["git", "-C", str(repo_path), "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True, text=True, timeout=TIMEOUT_GIT_GENERIC,
         )
         if result.returncode == 0:
             return result.stdout.strip()
-    except (FileNotFoundError, subprocess.SubprocessError):
-        pass
+        log.debug("git rev-parse HEAD rc=%d on %s", result.returncode, repo_path)
+    except (FileNotFoundError, subprocess.SubprocessError) as e:
+        log.debug("git rev-parse HEAD failed on %s: %s", repo_path, e)
     return None
 
 
