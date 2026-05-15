@@ -15,7 +15,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
-from config import (
+from .config import (
     BAML_CLI,
     BAML_NO_VERSION_CHECK,
     DEFAULT_MODEL,
@@ -23,7 +23,7 @@ from config import (
     TIMEOUT_BAML_GENERATE,
     VALIDATOR_STUB_CLIENTS,
 )
-from utils import baml_cli_available, get_logger
+from .utils import baml_cli_available, get_logger
 
 
 log = get_logger(__name__)

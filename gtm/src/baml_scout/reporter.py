@@ -16,16 +16,16 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from config import (
+from .config import (
     CHARS_PER_TOKEN,
     JSON_SCHEMA_BASE_OVERHEAD,
     JSON_SCHEMA_BYTES_PER_FIELD,
     TIMEOUT_GIT_GENERIC,
 )
-from scanner import CallSite
-from translator import Translation
-from benchmark import BenchmarkResult
-from utils import estimate_tokens, get_logger
+from .scanner import CallSite
+from .translator import Translation
+from .benchmark import BenchmarkResult
+from .utils import estimate_tokens, get_logger
 
 
 log = get_logger(__name__)

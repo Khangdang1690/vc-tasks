@@ -31,9 +31,9 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-from config import DEFAULT_BENCHMARK_TRIALS
-from translator import FreeQuotaExhausted, LLMClient, Translation
-from utils import estimate_tokens, get_logger, strip_markdown_fences
+from .config import DEFAULT_BENCHMARK_TRIALS
+from .translator import FreeQuotaExhausted, LLMClient, Translation
+from .utils import estimate_tokens, get_logger, strip_markdown_fences
 
 
 log = get_logger(__name__)

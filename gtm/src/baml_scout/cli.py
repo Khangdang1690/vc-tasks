@@ -28,10 +28,10 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-import config
-from providers import DEFAULT_PROVIDER, PROVIDER_NAMES, Provider, ProviderError, get_provider
-from scanner import CallSite, iter_python_files, scan_file, scan_repo
-from translator import (
+from . import config
+from .providers import DEFAULT_PROVIDER, PROVIDER_NAMES, Provider, ProviderError, get_provider
+from .scanner import CallSite, iter_python_files, scan_file, scan_repo
+from .translator import (
     FreeQuotaExhausted,
     LLMClient,
     Translation,
@@ -41,10 +41,10 @@ from translator import (
     seed_baml_examples,
     translate_site,
 )
-from validator import validate_baml_file, write_baml_project, run_generate
-from reporter import build_context, render_report, write_patch_diff
-from benchmark import benchmark_translation
-from utils import configure_logging, get_logger
+from .validator import validate_baml_file, write_baml_project, run_generate
+from .reporter import build_context, render_report, write_patch_diff
+from .benchmark import benchmark_translation
+from .utils import configure_logging, get_logger
 
 
 log = get_logger(__name__)
@@ -179,7 +179,10 @@ def _print_summary(sites: list[CallSite], target_label: str) -> None:
 # -- translation orchestration ---------------------------------------------
 
 
-_BAML_EXAMPLES_CACHE = Path(__file__).resolve().parent / "baml_examples.md"
+# Writable cache for the few-shot bundle when no wheel-bundled copy exists
+# (e.g. dev installs that haven't run `uv sync` yet). Lives under the user's
+# home so installs to read-only site-packages still work.
+_BAML_EXAMPLES_CACHE = Path.home() / ".cache" / "baml-scout" / "baml_examples.md"
 _TRANSLATION_ATTEMPTS = config.TRANSLATION_RETRIES + 1  # initial + retries
 
 
@@ -206,7 +209,7 @@ def _translate_all(sites: list[CallSite], args, provider: Provider) -> tuple[lis
 
     console.print(f"[dim]Loaded {len(keys)} {provider.name} key(s) from .env[/dim]")
     examples = seed_baml_examples(_BAML_EXAMPLES_CACHE)
-    console.print(f"[dim]Few-shot bundle: {len(examples):,} chars ({_BAML_EXAMPLES_CACHE.name})[/dim]")
+    console.print(f"[dim]Few-shot bundle: {len(examples):,} chars[/dim]")
 
     model = getattr(args, "model", None) or provider.default_model
     client = LLMClient(keys, provider=provider, model=model)

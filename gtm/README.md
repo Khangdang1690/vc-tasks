@@ -19,63 +19,100 @@ Read the strategic memo first: [STRATEGIC_MEMO.md](STRATEGIC_MEMO.md).
 6. Optionally (`--benchmark`) runs 5-trial head-to-head trials on the active provider comparing JSON-Schema-in-prompt vs BAML compact-hint formats. Measures tokens, latency, and schema-validity rate.
 7. Renders a markdown migration report with before/after diffs, the generated BAML inline, measured deltas, and a tweet-ready summary.
 
-## Setup
+## Install
 
 ```bash
-cd gtm/
-uv venv
-uv sync
-npm install -g @boundaryml/baml   # provides baml-cli
-echo "GEMINI_API_KEY=your-free-key" > .env     # get one at https://aistudio.google.com/
+pip install baml-scout                       # core, Gemini-only ($0 path)
+pip install 'baml-scout[openai]'             # add OpenAI adapter
+pip install 'baml-scout[anthropic]'          # add Anthropic adapter
+pip install 'baml-scout[all]'                # all providers
+npm install -g @boundaryml/baml              # provides baml-cli (required for validation)
+echo "GEMINI_API_KEY=your-free-key" > .env   # get one at https://aistudio.google.com/
 ```
 
 For rate-limit resilience, comma-separate multiple keys: `GEMINI_API_KEY=key1,key2,key3`. The scout rotates on `429`s and exits cleanly when all keys are exhausted — never silently switches to a paid provider.
 
-### Optional: use OpenAI or Anthropic instead
-
-The default ($0) path only needs `google-genai`. To run the translator on a paid provider you must (a) install the matching extra and (b) pass `--provider` explicitly. A first run on a paid provider prompts for `--yes` confirmation so a stray flag can't bill you.
+### From source (development)
 
 ```bash
-# OpenAI
-uv sync --extra openai
+git clone https://github.com/Khangdang1690/vc-tasks.git
+cd vc-tasks/gtm
+uv sync --dev
+uv run pytest          # 63 tests, no network
+uv run baml-scout --help
+```
+
+### Switching to a paid provider
+
+A first run on a paid provider hits an explicit "this is a PAID API" confirmation; pass `--yes` to acknowledge.
+
+```bash
 echo "OPENAI_API_KEY=sk-..." >> .env
-uv run python scout.py <repo> --provider openai --yes
+baml-scout <repo> --provider openai --yes
 
-# Anthropic
-uv sync --extra anthropic
 echo "ANTHROPIC_API_KEY=sk-ant-..." >> .env
-uv run python scout.py <repo> --provider anthropic --yes
+baml-scout <repo> --provider anthropic --yes
 
-# Override the model for any provider:
-uv run python scout.py <repo> --provider openai --model gpt-4o --yes
+baml-scout <repo> --provider openai --model gpt-4o --yes
 ```
 
 ## Usage
 
 ```bash
-uv run python scout.py <repo-url-or-path> [--scan-only] [--benchmark] [--out ./output]
-                                          [--provider {gemini,openai,anthropic}] [--model NAME] [--yes]
-                                          [--verbose]
+baml-scout <repo-url-or-path> [--scan-only] [--benchmark] [--out ./output]
+                              [--provider {gemini,openai,anthropic}] [--model NAME] [--yes]
+                              [--verbose]
 ```
+
+Also available: `python -m baml_scout <args>` if you didn't install the entry point.
 
 Examples:
 
 ```bash
 # Just detect call sites, no LLM calls
-uv run python scout.py https://github.com/jxnl/n-levels-of-rag --scan-only
+baml-scout https://github.com/jxnl/n-levels-of-rag --scan-only
 
 # Full migration + report (default: Gemini free tier)
-uv run python scout.py https://github.com/jxnl/n-levels-of-rag
+baml-scout https://github.com/jxnl/n-levels-of-rag
 
 # Full migration + report + measured benchmark
-uv run python scout.py https://github.com/jxnl/n-levels-of-rag --benchmark
+baml-scout https://github.com/jxnl/n-levels-of-rag --benchmark
 
 # Local file or directory
-uv run python scout.py ./path/to/some_file.py
+baml-scout ./path/to/some_file.py
 
-# Switch provider (paid — see "Optional" section above)
-uv run python scout.py <repo> --provider anthropic --yes
+# Switch provider (paid — see above)
+baml-scout <repo> --provider anthropic --yes
 ```
+
+## Library use
+
+The CLI is a thin wrapper around an importable Python API. Useful if you want to build the scout into a CI step, a Slack bot, or a hosted demo.
+
+```python
+from pathlib import Path
+from baml_scout import (
+    scan_repo,                       # AST detection
+    get_provider, LLMClient,         # provider abstraction
+    seed_baml_examples, translate_site,  # translation
+    validate_baml_file,              # baml-cli check
+    build_context, render_report,    # markdown report
+)
+
+sites = scan_repo(Path("./my-project"))
+
+provider = get_provider("gemini")           # or "openai", "anthropic"
+client = LLMClient(["YOUR-KEY"], provider=provider)
+examples = seed_baml_examples()             # wheel-bundled, no first-run shell-out
+
+for site in sites:
+    baml, fn_name = translate_site(client, site, examples)
+    result = validate_baml_file(baml)
+    if result.ok:
+        print(fn_name, "→ valid BAML")
+```
+
+Every public name in [src/baml_scout/__init__.py](src/baml_scout/__init__.py) is part of the stable surface; module-private names (`_…`) may change without notice.
 
 Output lands in `output/<repo-name>/`:
 
@@ -101,17 +138,24 @@ output/<repo-name>/
 ## Project layout
 
 ```
-scout.py        CLI entry point + orchestration
-scanner.py      AST visitor — detects LLM call sites
-translator.py   Provider-agnostic LLMClient (multi-key rotation, token tracking) + prompt template
-providers.py    Provider adapters (Gemini default, OpenAI / Anthropic opt-in)
-validator.py    baml-cli check + generate subprocess wrappers
-benchmark.py    Optional --benchmark mode (head-to-head trials)
-reporter.py     Delta estimation + Jinja rendering
-config.py       Central config (model, temps, retries, timeouts, skip-dirs)
-utils.py        Shared helpers (fence-strip, token estimator, logger setup)
-templates/migration_report.md.j2    The report template
-baml_examples.md  Few-shot bundle (seeded from baml-cli init on first run)
+src/baml_scout/
+├── __init__.py        Public library API (re-exports the stable surface)
+├── __main__.py        Lets `python -m baml_scout` work without an install
+├── cli.py             CLI entry point + orchestration (was scout.py)
+├── scanner.py         AST visitor — detects LLM call sites
+├── translator.py      Provider-agnostic LLMClient + prompt template
+├── providers.py       Provider adapters (Gemini default, OpenAI / Anthropic opt-in)
+├── validator.py       baml-cli check + generate subprocess wrappers
+├── benchmark.py       Optional --benchmark mode (head-to-head trials)
+├── reporter.py        Delta estimation + Jinja rendering
+├── config.py          Central config (model, temps, retries, timeouts, skip-dirs)
+├── utils.py           Shared helpers (fence-strip, token estimator, logger setup)
+├── baml_examples.md   Wheel-bundled few-shot seed
+└── templates/
+    └── migration_report.md.j2
+
+tests/                 pytest suite (63 tests, no network)
+pyproject.toml         Hatchling build; src layout; scripts entry → baml-scout
 ```
 
 ## Constraints honored

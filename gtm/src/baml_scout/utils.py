@@ -11,7 +11,7 @@ import logging
 import shutil
 import sys
 
-from config import BAML_CLI, CHARS_PER_TOKEN
+from .config import BAML_CLI, CHARS_PER_TOKEN
 
 
 # ---------------------------------------------------------------------------

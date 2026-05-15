@@ -23,16 +23,16 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
-import config
-from providers import (
+from . import config
+from .providers import (
     DEFAULT_PROVIDER,
     GenerationResult,
     Provider,
     ProviderError,
     get_provider,
 )
-from scanner import CallSite
-from utils import get_logger, strip_markdown_fences
+from .scanner import CallSite
+from .utils import get_logger, strip_markdown_fences
 
 
 log = get_logger(__name__)
@@ -50,16 +50,42 @@ MODEL = config.DEFAULT_MODEL
 # ---------------------------------------------------------------------------
 
 
-def seed_baml_examples(cache_path: Path, force: bool = False) -> str:
-    """Return the few-shot example string. Writes the cache file on first run.
+def _bundled_examples() -> str | None:
+    """Return the bundled `baml_examples.md` text if shipped with the package.
 
-    Strategy: shell out to `baml-cli init` in a temp dir and inline the three
-    canonical files (resume.baml / clients.baml / generators.baml). This is
-    deterministic, version-locked to the installed CLI, and works offline —
-    much more reliable than fetching docs.boundaryml.com.
+    The seed file is wheel-bundled (see pyproject.toml [tool.hatch.build.targets.wheel])
+    so a fresh `pip install` doesn't need `baml-cli init` to bootstrap. Returns
+    None if the resource is missing — older installs without the bundled seed
+    fall through to the live-shell-out path below.
     """
-    if cache_path.exists() and not force:
+    try:
+        from importlib.resources import files
+        res = files("baml_scout").joinpath("baml_examples.md")
+        return res.read_text(encoding="utf-8") if res.is_file() else None
+    except (ImportError, FileNotFoundError, ModuleNotFoundError):
+        return None
+
+
+def seed_baml_examples(cache_path: Path | None = None, force: bool = False) -> str:
+    """Return the few-shot example string handed to the translator LLM.
+
+    Resolution order:
+      1. If `cache_path` is given and exists, read it.
+      2. If the wheel-bundled `baml_examples.md` exists, use it (read-only).
+      3. Shell out to `baml-cli init` in a tempdir and inline the canonical
+         resume.baml / clients.baml / generators.baml files.
+
+    Step (2) is what makes `pip install baml-scout` work offline on first
+    run — no npm dependency at translation time, only at validation time.
+    Pass `force=True` to skip steps 1 and 2 and re-shell-out (useful when
+    a new baml-cli version ships a different template).
+    """
+    if not force and cache_path is not None and cache_path.exists():
         return cache_path.read_text(encoding="utf-8")
+    if not force:
+        bundled = _bundled_examples()
+        if bundled:
+            return bundled
 
     with tempfile.TemporaryDirectory(prefix="baml_seed_") as tmp:
         try:
@@ -91,7 +117,15 @@ def seed_baml_examples(cache_path: Path, force: bool = False) -> str:
         generators_baml = (seed_dir / "generators.baml").read_text(encoding="utf-8")
 
     bundle = _build_example_bundle(resume_baml, clients_baml, generators_baml)
-    cache_path.write_text(bundle, encoding="utf-8")
+    if cache_path is not None:
+        try:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            cache_path.write_text(bundle, encoding="utf-8")
+        except OSError as e:
+            # Cache write failures are non-fatal — the bundle is still
+            # usable for this run. Logged so a --verbose run shows why a
+            # next run will re-shell-out.
+            log.debug("failed to write examples cache %s: %s", cache_path, e)
     return bundle
 
 

@@ -22,13 +22,13 @@ import ast
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from config import (
+from .config import (
     RAW_JSON_AFTER_WINDOW,
     SCAN_CONTEXT_AFTER,
     SCAN_CONTEXT_BEFORE,
     SKIP_DIRS,
 )
-from utils import get_logger
+from .utils import get_logger
 
 
 log = get_logger(__name__)
